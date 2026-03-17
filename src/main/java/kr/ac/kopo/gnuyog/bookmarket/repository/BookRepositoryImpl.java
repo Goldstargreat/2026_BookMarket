@@ -19,7 +19,7 @@ import java.util.List;
         book1.setAuthor("아가사 크리스티");
         book1.setDescription("고립된 섬에 초대받은 10명의 사람들이 동요 '열 꼬마 인디언' 가사에 맞춰 차례대로 살해당하는 클래식 미스터리");
         book1.setPublisher("황금가지");
-        book1.setCategory("추리");
+        book1.setCategory("소설");
         book1.setUnitsInStock(1000);
         book1.setReleaseDate("2014 / 11 / 25");
 
