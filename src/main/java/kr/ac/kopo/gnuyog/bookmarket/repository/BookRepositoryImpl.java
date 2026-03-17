@@ -21,7 +21,7 @@ import java.util.List;
         book1.setPublisher("황금가지");
         book1.setCategory("추리");
         book1.setUnitsInStock(1000);
-        book1.setReleaseDate("2024 / 12 / 31");
+        book1.setReleaseDate("2014 / 11 / 25");
 
         Book book2 = new Book();
         book2.setBookId("ISBN5678");
