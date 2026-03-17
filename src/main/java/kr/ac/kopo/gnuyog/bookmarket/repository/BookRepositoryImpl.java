@@ -15,7 +15,7 @@ import java.util.List;
         Book book1 = new Book();
         book1.setBookId("ISBN1234");
         book1.setName("그리고 아무도 없었다");
-        book1.setUnitPrice(new BigDecimal(25000));
+        book1.setUnitPrice(new BigDecimal(10800));
         book1.setAuthor("아가사 크리스티");
         book1.setDescription("고립된 섬에 초대받은 10명의 사람들이 동요 '열 꼬마 인디언' 가사에 맞춰 차례대로 살해당하는 클래식 미스터리");
         book1.setPublisher("황금가지");
