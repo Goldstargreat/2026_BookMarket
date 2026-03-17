@@ -1,37 +1,45 @@
-<html>
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
 	<meta charset="UTF-8">
 	<title>도서 목록</title>
-	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
 <div class="container py-4">
 	<header class="pb-3 mb-4 border-bottom">
 		<a href="/welcome.html" class="d-flex align-items-center text-body-emphasis text-decoration-none">
-			<img src="imgs/book_icon.png">&nbsp;&nbsp;
-			<span class="fs-4">Kyobo BookMarket</span>
+<!--			<img src="imgs/book_icon.png" alt="logo" class="bi bi-book-half me-2" width="80">-->
+			<span class="fs-4">Book Market</span>
 		</a>
 	</header>
+
 	<div class="p-5 mb-4 bg-body-tertiary rounded-3">
 		<div class="container-fluid py-5">
 			<h1 class="display-5 fw-bold">도서 목록</h1>
-			<p class="col-md-8 fs-4">Kyobo BookMarket</p>
+			<p class="col-md-8 fs-4">BookMarket</p>
 		</div>
 	</div>
 
 	<div class="row align-items-md-stretch text-center">
-		<div class="col-md-4" th:each="book:${bookList}">
-			<!--		<img th:src="'/BookMarket/images/'+${book.fileName}" alt="image" style = "width: 60%" />-->
-			<h3 th:text ="${book.name}"></h3>
-			<p th:text = "${book.author}">
-			<p th:text = "${book.publisher} + '|'+ ${book.releaseDate}">
-			<p align="left" th:text = "${book.description}">
-			<p th:text = "${book.unitPrice}+'원'">
-			<p><a th:href= "'/BookMarket/books/book?id='+${book.bookId}" class=" btn btn-Secondary" role="button">상세정보 &raquo;</a>
+		<div class="col-md-4 mb-4" th:each="book : ${bookList}">
+			<img th:src="'/BookMarket/images/' + ${book.fileName}" alt="book image" style="width: 60%" class="img-fluid mb-2">
+			<h3 th:text="${book.name}">도서 제목</h3>
+			<p th:text="${book.author}">저자</p>
+			<p th:text="${book.publisher} + ' | ' + ${book.releaseDate}">출판사 | 출시일</p>
+			<p class="text-start" th:text="${book.description}">상세 설명</p>
+			<p><strong th:text="${book.unitPrice} + '원'">가격</strong></p>
+			<p>
+				<a th:href="@{/BookMarket/books/book(id=${book.bookId})}" class="btn btn-secondary" role="button">
+					상세정보 &raquo;
+				</a>
+			</p>
 		</div>
-
 	</div>
 
+	<footer class="pt-3 mt-4 text-body-secondary border-top">
+		&copy; 2024 BookMarket
+	</footer>
 </div>
 </body>
 </html>
