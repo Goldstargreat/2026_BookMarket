@@ -23,4 +23,4 @@ public class Book {
     private String condition; // 신규도서 or 중고도서 or 전자책(도서 상태)
 }
 
-//Book 클래스의 모든 멤버 변수의 Setter()와 Getter()메서드가 추가됨
+// @Data, @Getter, @Setter를 넣으면 Book 클래스의 모든 멤버 변수의 Setter()와 Getter()메서드가 추가됨
