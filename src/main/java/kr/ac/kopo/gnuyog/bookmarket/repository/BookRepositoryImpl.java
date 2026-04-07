@@ -103,14 +103,12 @@ import java.util.*;
         Set<Book> booksByPublisher = new HashSet<Book>();
         Set<Book> booksByCategory = new HashSet<Book>();
         Set<String> booksByFilter = filter.keySet();
-        if(booksByFilter.contains("publisher"))  // j
+        if(booksByFilter.contains("publisher"))
         {
-            for(int j = 0; j < filter.get("publisher").size(); j++)
+            for(String publisherName : filter.get("publisher"))
             {
-                String publisherName = filter.get("publisher").get(j);
-                for(int i = 0; i < listOfBooks.size(); i++)
+                for(Book searchBook : listOfBooks)
                 {
-                    Book searchBook = listOfBooks.get(i);
                     if(publisherName.equalsIgnoreCase(searchBook.getPublisher()))
                     {
                         booksByPublisher.add(searchBook);
