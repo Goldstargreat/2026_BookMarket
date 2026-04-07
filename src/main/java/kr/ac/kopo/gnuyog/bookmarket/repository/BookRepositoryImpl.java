@@ -4,12 +4,11 @@ import kr.ac.kopo.gnuyog.bookmarket.domain.Book;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Repository
     public class BookRepositoryImpl implements BookRepository{
-    private List<Book> listofBooks = new ArrayList<Book>();
+    private List<Book> listOfBooks = new ArrayList<Book>();
 
     public BookRepositoryImpl() {
         Book book1 = new Book();
@@ -18,7 +17,7 @@ import java.util.List;
         book1.setUnitPrice(new BigDecimal(10800));
         book1.setAuthor("아가사 크리스티");
         book1.setDescription("전 세계 미스터리의 역사를 재창조한 추리 소설의 여왕,\n" +
-                "애거서 크리스티를 대표하는 작품만을 모은 에디터스 초이스. 고립된 섬에 초대받은 10명의 사람들이 " +
+                "아가사 크리스티를 대표하는 작품만을 모은 에디터스 초이스. 고립된 섬에 초대받은 10명의 사람들이 " +
                 "동요 '열 꼬마 인디언' 가사에 맞춰 차례대로 살해당하는 클래식 미스터리");
         book1.setPublisher("황금가지");
         book1.setCategory("소설");
@@ -37,7 +36,7 @@ import java.util.List;
                 "‘혼자 공부할 수 있는’ 커리큘럼을 그대로 믿고 끝까지 따라가다 보면 " +
                 "프로그래밍 공부가 난생 처음인 C 언어 입문자도 무리 없이 책을 끝까지 마칠 수 있다!");
         book2.setPublisher("한빛미디어");
-        book2.setCategory("it");
+        book2.setCategory("IT교육교재");
         book2.setUnitsInStock(1000);
         book2.setReleaseDate("2023 / 05 / 18");
 
@@ -52,18 +51,83 @@ import java.util.List;
                 "마무리에서는 [핵심 포인트]와 [확인 문제]로 한번에 복습합니다. ‘혼자 공부할 수 있는’ 커리큘럼을 그대로 믿고 " +
                 "끝까지 따라가다 보면 프로그래밍 공부가 난생 처음인 파이썬 입문자도 무리 없이 책을 끝까지 마칠 수 있습니다!");
         book3.setPublisher("한빛미디어");
-        book3.setCategory("it");
+        book3.setCategory("IT교육교재");
         book3.setUnitsInStock(1000);
         book3.setReleaseDate("2022 / 06 / 01");
 
-        listofBooks.add(book1);
-        listofBooks.add(book2);
-        listofBooks.add(book3);
+        listOfBooks.add(book1);
+        listOfBooks.add(book2);
+        listOfBooks.add(book3);
 }
 
     @Override
-        public List<Book> getAllBookList(){
-            return listofBooks;
-        }
+        public List<Book> getAllBookList()
+    {
+            return listOfBooks;
     }
+
+    @Override
+    public Book getBookById(String bookId){
+        Book book = null;
+        for(Book searchBook: listOfBooks){
+            if(searchBook != null && searchBook.getBookId() != null && searchBook.getBookId().equals(bookId))
+            {
+                book = searchBook;
+                break;
+            }
+        }
+            if(book == null)
+            {
+                throw new IllegalArgumentException("도서ID가 " + "bookId" + "인 도서는 찾을 수 없습니다!");
+            }
+            return book;
+        }
+
+    @Override
+    public List<Book> getBookListByCategory(String category)
+    {
+        List<Book> bookByCategory = new ArrayList<Book>();
+        for(Book searchBook : listOfBooks)
+        {
+            if(category.equalsIgnoreCase(searchBook.getCategory())) // 대소문자 무시
+            {
+                bookByCategory.add(searchBook);
+            }
+        }
+        return bookByCategory;
+    }
+
+    @Override
+    public Set<Book> getBookListByFilter(Map<String, List<String>> filter)
+    {
+        Set<Book> booksByPublisher = new HashSet<Book>();
+        Set<Book> booksByCategory = new HashSet<Book>();
+        Set<String> booksByFilter = filter.keySet();
+        if(booksByFilter.contains("publisher"))  // j
+        {
+            for(int j = 0; j < filter.get("publisher").size(); j++)
+            {
+                String publisherName = filter.get("publisher").get(j);
+                for(int i = 0; i < listOfBooks.size(); i++)
+                {
+                    Book searchBook = listOfBooks.get(i);
+                    if(publisherName.equalsIgnoreCase(searchBook.getPublisher()))
+                    {
+                        booksByPublisher.add(searchBook);
+                    }
+                }
+            }
+        }
+        if(booksByFilter.contains("category"))
+        {
+            for(String category : filter.get("category"))
+            {
+                List<Book> list = getBookListByCategory(category);
+                booksByCategory.addAll(list);
+            }
+        }
+        booksByCategory.retainAll(booksByPublisher);
+        return booksByCategory;
+    }
+}
 
