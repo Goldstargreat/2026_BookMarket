@@ -51,10 +51,11 @@ public class BookController {
     }
     @GetMapping("/filter/{bookFilter}")
     public String requestBooksByFilter(
-            @MatrixVariable(pathVar = "bookFilter")Map<String, List<String>> bookFilter,
-            Model model) {
-        Set<Book> bookByFilter = bookService.getBookListByFilter(bookFilter);
-        model.addAttribute("bookList", bookByFilter);
+            @MatrixVariable(pathVar = "bookFilter") Map<String, List<String>> bookFilter,
+            Model model)
+    {
+        Set<Book> booksByFilter = bookService.getBookListByFilter(bookFilter);
+        model.addAttribute("bookList", booksByFilter);
         return "books";
     }
 }

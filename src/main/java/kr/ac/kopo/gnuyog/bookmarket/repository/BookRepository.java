@@ -7,8 +7,8 @@ import java.util.Set;
 
 public interface BookRepository
 {
-  List<Book> getAllBookList();
-  Book getBookById(String bookId);
-  List<Book> getBookListByCategory(String category);
-  Set<Book> getBookListByFilter(Map<String, List<String>> filter);
+  List<Book> getAllBookList(); // 모든 책 목록 반환
+  Book getBookById(String bookId); // 특정 ID의 책 1권 조회
+  List<Book> getBookListByCategory(String category); // "IT", "소설" 등의 카테고리로 필터링
+  Set<Book> getBookListByFilter(Map<String, List<String>> filter); // 여러 조건으로 검색(고급 검색 키- 값 구조)
 }
