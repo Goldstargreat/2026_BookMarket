@@ -6,10 +6,11 @@ import org.springframework.stereotype.Repository;
 import java.math.BigDecimal;
 import java.util.*;
 
-@Repository
+@Repository // 스프링이 이 클래스를 데이터 접근 객체로 인식한다
     public class BookRepositoryImpl implements BookRepository{
     private List<Book> listOfBooks = new ArrayList<Book>();
 
+    // 생성자(데이터 초기화) 책을 만들어서 추가함
     public BookRepositoryImpl() {
         Book book1 = new Book();
         book1.setBookId("ISBN1234");
@@ -64,10 +65,10 @@ import java.util.*;
         public List<Book> getAllBookList()
     {
             return listOfBooks;
-    }
+    } // 전체 조회
 
     @Override
-    public Book getBookById(String bookId){
+    public Book getBookById(String bookId){ // id로 조회하기
         Book book = null;
         for(Book searchBook: listOfBooks){
             if(searchBook != null && searchBook.getBookId() != null && searchBook.getBookId().equals(bookId))
@@ -76,7 +77,7 @@ import java.util.*;
                 break;
             }
         }
-            if(book == null)
+            if(book == null) // 없으면 예외 처리
             {
                 throw new IllegalArgumentException("도서ID가 " + "bookId" + "인 도서는 찾을 수 없습니다!");
             }
@@ -98,7 +99,7 @@ import java.util.*;
     }
 
     @Override
-    public Set<Book> getBookListByFilter(Map<String, List<String>> filter)
+    public Set<Book> getBookListByFilter(Map<String, List<String>> filter) // 필터 검색
     {
         Set<Book> booksByPublisher = new HashSet<Book>();
         Set<Book> booksByCategory = new HashSet<Book>();
