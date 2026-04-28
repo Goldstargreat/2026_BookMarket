@@ -10,7 +10,8 @@ import java.math.BigDecimal;
 @Setter
 @Getter
 
-public class Book {
+public class Book
+{
     private String bookId; // 도서 id
     private String name; // 도서 제목
     private BigDecimal unitPrice; // 단가

@@ -32,15 +32,6 @@ public class BookController {
         return "book";
     }
 
-    @GetMapping("all")
-    public ModelAndView requestAllbooks()
-    {
-      ModelAndView modelAndView = new ModelAndView();
-      List<Book> list = bookService.getAllBookList();
-      modelAndView.addObject("bookList", list);
-      modelAndView.setViewName("books");
-      return modelAndView;
-    }
 
     @GetMapping("/{category}")
     public String requestBookByCategory(@PathVariable("category") String category, Model model)
@@ -57,5 +48,32 @@ public class BookController {
         Set<Book> booksByFilter = bookService.getBookListByFilter(bookFilter);
         model.addAttribute("bookList", booksByFilter);
         return "books";
+    }
+    @GetMapping("/add")
+    public String requestAddBookForm()
+    {
+        return "addBook";
+    }
+    @ModelAttribute
+    public void addAttributes(Model model)
+    {
+        model.addAttribute("addTitle", "신규 도서 등록");
+    }
+
+    @PostMapping("/add")
+    public String submitAddNewBook(@ModelAttribute Book book)
+    {
+        bookService.setNewBook(book);
+        return "redirect:/books";
+    }
+
+    @GetMapping("all")
+    public ModelAndView requestAllbooks()
+    {
+        ModelAndView modelAndView = new ModelAndView();
+        List<Book> list = bookService.getAllBookList();
+        modelAndView.addObject("bookList", list);
+        modelAndView.setViewName("books");
+        return modelAndView;
     }
 }
