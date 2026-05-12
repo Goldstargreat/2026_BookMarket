@@ -3,17 +3,18 @@
 	<meta charset="UTF-8">
 	<title>도서 목록</title>
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
 </head>
 <body>
 <div class="container py-4">
 	<header class="pb-3 mb-4 border-bottom">
 		<div class="container d-flex flex-wrap justify-content-center">
 			<a href="/BookMarket/home" class="d-flex align-items-center text-body-emphasis text-decoration-none mb-3 mb-lg-0 me-lg-auto">
-				<img src="/BookMarket/imgs/book_icon.png">&nbsp;&nbsp;&nbsp;
+				<img src="/BookMarket/imgs/book_icon.png">&nbsp;&nbsp;
 				<span class="fs-4">BookMarket</span>
 			</a>
-			<a href="/BookMarket/books/소설" class="nav-link">소설</a> &nbsp;|&nbsp;
-			<a href="/BookMarket/books/IT교육교재" class = "nav-link">IT교육교재</a>
+			<a href="/BookMarket/books/IT전문서" class="nav-link">IT전문서</a>&nbsp;|&nbsp;
+			<a href="/BookMarket/books/IT교육교재" class="nav-link">IT교육교재</a>
 		</div>
 	</header>
 	<div class="p-5 mb-4 bg-body-tertiary rounded-3">
@@ -25,15 +26,17 @@
 
 	<div class="row align-items-md-stretch text-center">
 		<div class="col-md-4" th:each="book:${bookList}">
-			<img th:src="'/BookMarket/imgs/'+${book.fileName}" alt="image" style = "width: 60%" />
-				<h3 th:text ="${book.name}"></h3>
-				<p th:text = "${book.author}">
-				<p th:text = "${book.publisher} + '|'+ ${book.releaseDate}">
-				<p align="left" th:text = "${book.description}">
-				<p th:text = "${book.unitPrice}+'원'">
-				<p><a th:href= "'/BookMarket/books/book?id='+${book.bookId}" class=" btn btn-Secondary" role="button">상세정보 &raquo;</a>
+			<img th:src="'/BookMarket/images/'+${book.fileName}" alt="image" style = "width: 60%" />
+			<h3 th:text ="${book.name}"></h3>
+			<p th:text = "${book.author}">
+			<p th:text = "${book.publisher} + '|'+ ${book.releaseDate}">
+			<p align="left" th:text = "${book.description}">
+			<p th:text = "${book.unitPrice}+'원'">
+			<p><a th:href= "'/BookMarket/books/book?id='+${book.bookId}" class=" btn btn-Secondary" role="button">상세정보 &raquo;</a>
 		</div>
+
 	</div>
+
 </div>
 </body>
 </html>
