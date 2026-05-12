@@ -7,13 +7,15 @@ import java.math.BigDecimal;
 import java.util.*;
 
 @Repository // 스프링이 이 클래스를 데이터 접근 객체로 인식한다
-    public class BookRepositoryImpl implements BookRepository{
+    public class BookRepositoryImpl implements BookRepository
+{
     private List<Book> listOfBooks = new ArrayList<Book>();
 
     // 생성자(데이터 초기화) 책을 만들어서 추가함
-    public BookRepositoryImpl() {
+    public BookRepositoryImpl()
+    {
         Book book1 = new Book();
-        book1.setBookId("ISBN1234");
+        book1.setBookId("ISBN1001");
         book1.setName("그리고 아무도 없었다");
         book1.setUnitPrice(new BigDecimal(10800));
         book1.setAuthor("아가사 크리스티");
@@ -24,9 +26,10 @@ import java.util.*;
         book1.setCategory("소설");
         book1.setUnitsInStock(1000);
         book1.setReleaseDate("2014 / 11 / 25");
+        book1.setFileName("ISBN1001.jpg");
 
         Book book2 = new Book();
-        book2.setBookId("ISBN5678");
+        book2.setBookId("ISBN1002");
         book2.setName("혼자 공부하는 C언어");
         book2.setUnitPrice(new BigDecimal(23400));
         book2.setAuthor("서현우");
@@ -40,9 +43,10 @@ import java.util.*;
         book2.setCategory("IT교육교재");
         book2.setUnitsInStock(1000);
         book2.setReleaseDate("2023 / 05 / 18");
+        book2.setFileName("ISBN1002.jpg");
 
         Book book3 = new Book();
-        book3.setBookId("ISBN9791162245651");
+        book3.setBookId("ISBN1003");
         book3.setName("혼자 공부하는 파이선");
         book3.setUnitPrice(new BigDecimal(19800));
         book3.setAuthor("윤인성");
@@ -55,6 +59,7 @@ import java.util.*;
         book3.setCategory("IT교육교재");
         book3.setUnitsInStock(1000);
         book3.setReleaseDate("2022 / 06 / 01");
+        book3.setFileName("ISBN1003.jpg");
 
         listOfBooks.add(book1);
         listOfBooks.add(book2);
@@ -68,9 +73,11 @@ import java.util.*;
     } // 전체 조회
 
     @Override
-    public Book getBookById(String bookId){ // id로 조회하기
+    public Book getBookById(String bookId)
+    { // id로 조회하기
         Book book = null;
-        for(Book searchBook: listOfBooks){
+        for(Book searchBook: listOfBooks)
+        {
             if(searchBook != null && searchBook.getBookId() != null && searchBook.getBookId().equals(bookId))
             {
                 book = searchBook;
@@ -130,7 +137,8 @@ import java.util.*;
     }
 
     @Override
-    public void setNewBook(Book book) {
+    public void setNewBook(Book book)
+    {
         listOfBooks.add(book);
     }
 }

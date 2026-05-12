@@ -25,13 +25,13 @@
 
 	<div class="row align-items-md-stretch text-center">
 		<div class="col-md-4" th:each="book:${bookList}">
-			<!--		<img th:src="'/BookMarket/images/'+${book.fileName}" alt="image" style = "width: 60%" />-->
-			<h3 th:text ="${book.name}"></h3>
-			<p th:text = "${book.author}">
-			<p th:text = "${book.publisher} + '|'+ ${book.releaseDate}">
-			<p align="left" th:text = "${book.description}">
-			<p th:text = "${book.unitPrice}+'원'">
-			<p><a th:href= "'/BookMarket/books/book?id='+${book.bookId}" class=" btn btn-Secondary" role="button">상세정보 &raquo;</a>
+			<img th:src="'/BookMarket/imgs/'+${book.fileName}" alt="image" style = "width: 60%" />
+				<h3 th:text ="${book.name}"></h3>
+				<p th:text = "${book.author}">
+				<p th:text = "${book.publisher} + '|'+ ${book.releaseDate}">
+				<p align="left" th:text = "${book.description}">
+				<p th:text = "${book.unitPrice}+'원'">
+				<p><a th:href= "'/BookMarket/books/book?id='+${book.bookId}" class=" btn btn-Secondary" role="button">상세정보 &raquo;</a>
 		</div>
 	</div>
 </div>

@@ -3,6 +3,7 @@ package kr.ac.kopo.gnuyog.bookmarket.domain;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
 
@@ -22,6 +23,8 @@ public class Book
     private long unitsInStock; // 재고 수량
     private String releaseDate; // 출판일
     private String condition; // 신규도서 or 중고도서 or 전자책(도서 상태)
+    private String fileName; // 도서 이미지 파일 이름
+    private MultipartFile bookImage; // 도서 이미지 파일 객체
 }
 
 // @Data, @Getter, @Setter를 넣으면 Book 클래스의 모든 멤버 변수의 Setter()와 Getter()메서드가 추가됨
