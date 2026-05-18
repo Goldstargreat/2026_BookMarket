@@ -1,4 +1,4 @@
-<html xmlns:th="http://www.thymeleaf.org">
+<html>
 <head>
 	<meta charset="UTF-8">
 	<title>도서 목록</title>
@@ -17,7 +17,6 @@
 			<a href="/BookMarket/books/IT교육교재" class="nav-link">IT교육교재</a>
 		</div>
 	</header>
-
 	<div class="p-5 mb-4 bg-body-tertiary rounded-3">
 		<div class="container-fluid py-5">
 			<h1 class="display-5 fw-bold">도서 목록</h1>
@@ -27,22 +26,17 @@
 
 	<div class="row align-items-md-stretch text-center">
 		<div class="col-md-4" th:each="book:${bookList}">
-			<img th:src="'/BookMarket/images/'+${book.fileName}" alt="image" style="width: 60%" />
-			<h3 th:text="${book.name}"></h3>
-			<p th:text="${book.author}"></p>
-			<p th:text="${book.publisher} + '|' + ${book.releaseDate}"></p>
-			<p align="left" th:text="${book.description}"></p>
-			<p th:text="${book.unitPrice} + '원'"></p>
-			<p>
-				<a th:href="'/BookMarket/books/book?id=' + ${book.bookId}"
-				   class="btn btn-secondary" role="button">상세정보 &raquo;</a>
-			</p>
+			<img th:src="'/BookMarket/images/'+${book.fileName}" alt="image" style = "width: 60%" />
+			<h3 th:text ="${book.name}"></h3>
+			<p th:text = "${book.author}">
+			<p th:text = "${book.publisher} + '|'+ ${book.releaseDate}">
+			<p align="left" th:text = "${book.description}">
+			<p th:text = "${book.unitPrice}+'원'">
+			<p><a th:href= "'/BookMarket/books/book?id='+${book.bookId}" class=" btn btn-Secondary" role="button">상세정보 &raquo;</a>
 		</div>
+
 	</div>
 
-	<footer class="pt-3 mt-4 text-body-secondary border-top">
-		<span class="text-body-secondary">&copy;2026 BookMarket</span>
-	</footer>
 </div>
 </body>
 </html>

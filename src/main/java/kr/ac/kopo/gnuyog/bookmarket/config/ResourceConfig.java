@@ -11,8 +11,7 @@ public class ResourceConfig implements WebMvcConfigurer {
     String fileDir;
 
     @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry)
-    {
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
         WebMvcConfigurer.super.addResourceHandlers(registry);
         registry.addResourceHandler("/images/**")
                 .addResourceLocations("file:///" + fileDir);
