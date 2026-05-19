@@ -1,7 +1,5 @@
 package kr.ac.kopo.gnuyog.bookmarket.controller;
 
-
-import ch.qos.logback.classic.net.SimpleSocketServer;
 import jakarta.servlet.http.HttpServletResponse;
 import kr.ac.kopo.gnuyog.bookmarket.domain.Book;
 import kr.ac.kopo.gnuyog.bookmarket.service.BookService;
@@ -26,7 +24,8 @@ import static java.lang.System.out;
 
 @Controller
 @RequestMapping("/books")
-public class BookController {
+public class BookController
+{
     @Autowired
     private BookService bookService;
 
@@ -105,11 +104,16 @@ public class BookController {
 
         try {
             OutputStream os = response.getOutputStream();
+            // 브라우저 출력 스트림 얻기
             FileInputStream fileIn = new FileInputStream(imgFile);
+            // 파일 읽기 스트림 생성
             FileCopyUtils.copy(fileIn, os);
+            // 파일 내용을 브라우저로 복사.
             fileIn.close();
             os.close();
+            // 스트림 닫기
         } catch (IOException e)
+                // 다운로드 오류 처리
         {
             throw new RuntimeException(e);
         }
