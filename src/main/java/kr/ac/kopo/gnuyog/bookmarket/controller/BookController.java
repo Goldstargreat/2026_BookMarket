@@ -1,21 +1,28 @@
 package kr.ac.kopo.gnuyog.bookmarket.controller;
 
 
+import ch.qos.logback.classic.net.SimpleSocketServer;
+import jakarta.servlet.http.HttpServletResponse;
 import kr.ac.kopo.gnuyog.bookmarket.domain.Book;
 import kr.ac.kopo.gnuyog.bookmarket.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import static java.lang.System.out;
 
 @Controller
 @RequestMapping("/books")
@@ -62,13 +69,15 @@ public class BookController {
     @PostMapping("/add")
     public String submitAddNewBook(@ModelAttribute Book book){
         MultipartFile bookImage = book.getBookImage();
-        System.out.println("파일사이즈" + bookImage.getSize());
+        out.println("파일사이즈" + bookImage.getSize());
         String saveName = bookImage.getOriginalFilename();
         File saveFile = new File(fileDir, saveName);
         if (bookImage != null && !bookImage.isEmpty()){
-            try {
+            try
+            {
                 bookImage.transferTo(saveFile);
-            } catch (IOException e) {
+            } catch (IOException e)
+            {
                 throw new RuntimeException("이미지가 업로드 되지 않았습니다.");
             }
         }
@@ -78,14 +87,37 @@ public class BookController {
     }
 
     @ModelAttribute
-    public void addAddtributes(Model model){
+    public void addAddtributes(Model model)
+    {
         model.addAttribute("addTitle", "신규 도서 등록");
     }
 
+    @GetMapping("download")
+    public void downloadBookImage(@RequestParam("file") String paramKey,
+                                  HttpServletResponse response)
+    {
+        File imgFile = new File(fileDir + paramKey);
 
+        response.setContentType("application/download");
+        response.setContentLength((int) imgFile.length());
+        response.setHeader("Content-Disposition",
+                "attachment;filename=\"" + paramKey + "\"");
+
+        try {
+            OutputStream os = response.getOutputStream();
+            FileInputStream fileIn = new FileInputStream(imgFile);
+            FileCopyUtils.copy(fileIn, os);
+            fileIn.close();
+            os.close();
+        } catch (IOException e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
 
     @GetMapping("/all")
-    public ModelAndView requestAllBooks(){
+    public ModelAndView requestAllBooks()
+    {
         ModelAndView modelAndView = new ModelAndView();
         List<Book> list = bookService.getAllBookList();
         modelAndView.addObject("bookList", list);
