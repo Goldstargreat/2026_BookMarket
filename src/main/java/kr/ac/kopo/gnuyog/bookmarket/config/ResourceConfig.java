@@ -19,7 +19,8 @@ public class ResourceConfig implements WebMvcConfigurer
     // 정적 리소스 핸들러를 등록하는 메서드 오버라이드
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry)
-    {
+         // registry는 리소스 등록 도우미(여기에 URL 규칙을 등록)
+    {   // addResourceHandlers 메서드는 정적 파일(css, js, image 등)을 어떻게 처리할지 설정
         // 부모 인터페이스의 기본 동작을 먼저 수행 (기본 정적 리소스 설정 유지)
         WebMvcConfigurer.super.addResourceHandlers(registry);
         // URL 패턴 "/images/**" 로 들어오는 요청을 처리할 핸들러 등록
