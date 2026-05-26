@@ -30,58 +30,59 @@
                 <div class="mb-3 row">
                     <label class="col-sm-2 control-label">도서 ID</label>
                     <div class="col-sm-3">
-                        <input type="text" name="bookId" class="form-control" />
+                        <input type="text" name="bookId" class="form-control" th:field="*{bookId}"/>
                     </div>
+
                     <div class="col-sm-6">
-                        <p class="text-danger" />
+                        <p class="text-danger" th:errors="*{bookId}"/>
                     </div>
                 </div>
                 <div class="mb-3 row">
                     <label class="col-sm-2 control-label">도서명</label>
                     <div class="col-sm-3">
-                        <input type="text" name="name" class="form-control"/>
+                        <input type="text" name="name" class="form-control" th:field="*{name}"/>
                     </div>
                     <div class="col-sm-6">
-                        <p class="text-danger"/>
+                        <p class="text-danger" th:errors="*{name}"/>
                     </div>
                 </div>
                 <div class="mb-3 row">
                     <label class="col-sm-2 control-label">가격</label>
                     <div class="col-sm-3">
-                        <input type="text" name="unitPrice" class="form-control" />
+                        <input type="text" name="unitPrice" class="form-control" th:field="*{unitPrice}" />
                     </div>
                     <div class="col-sm-6">
-                        <p class="text-danger"/>
+                        <p class="text-danger" th:errors="*{unitPrice}"/>
                     </div>
                 </div>
                 <div class="mb-3 row">
                     <label class="col-sm-2 control-label">저자</label>
                     <div class="col-sm-3">
-                        <input type="text" name="author" class="form-control"/>
+                        <input type="text" name="author" class="form-control" th:field="*{author}"/>
                     </div>
                 </div>
                 <div class="mb-3 row">
                     <label class="col-sm-2 control-label">상세정보</label>
                     <div class="col-sm-3">
-                        <textarea name="description" class="form-control" cols="50" rows="2"></textarea>
+                        <textarea name="description" class="form-control" cols="50" rows="2" th:field="*{description}"></textarea>
                     </div>
                 </div>
                 <div class="mb-3 row">
                     <label class="col-sm-2 control-label">출판사</label>
                     <div class="col-sm-3">
-                        <input type="text" name="publisher" class="form-control" />
+                        <input type="text" name="publisher" class="form-control" th:field="*{publisher}" />
                     </div>
                 </div>
                 <div class="mb-3 row">
                     <label class="col-sm-2 control-label">분야</label>
                     <div class="col-sm-3">
-                        <input type="text" name="category" class="form-control" />
+                        <input type="text" name="category" class="form-control" th:field="*{category}" />
                     </div>
                 </div>
                 <div class="mb-3 row">
                     <label class="col-sm-2 control-label">재고량</label>
                     <div class="col-sm-3">
-                        <input type="text" name="unitsInStock" class="form-control"/>
+                        <input type="text" name="unitsInStock" class="form-control" th:field="*{unitsInStock}"/>
                     </div>
                     <div class="col-sm-6">
                         <p class="text-danger"/>
@@ -90,7 +91,7 @@
                 <div class="mb-3 row">
                     <label class="col-sm-2 control-label">출판일</label>
                     <div class="col-sm-3">
-                        <input type="text" name="releaseDate" class="form-control"/>
+                        <input type="text" name="releaseDate" class="form-control" th:field="*{releaseDate}"/>
                     </div>
                 </div>
                 <div class="mb-3 row">
