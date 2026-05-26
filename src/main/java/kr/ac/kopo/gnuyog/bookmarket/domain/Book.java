@@ -14,7 +14,7 @@ import java.math.BigDecimal;
 
 public class Book
 {
-    @Pattern(regexp = "isbn[0-9a-zA-Z] + ")
+    @Pattern(regexp = "isbn[0-9a-zA-Z]+")
     private String bookId; // 도서 id
     @Size(min = 4, max =50)
     private String name; // 도서 제목
