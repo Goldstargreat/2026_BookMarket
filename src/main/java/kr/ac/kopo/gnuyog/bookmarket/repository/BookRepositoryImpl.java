@@ -15,7 +15,7 @@ import java.util.*;
     public BookRepositoryImpl()
     {
         Book book1 = new Book();
-        book1.setBookId("ISBN1001");
+        book1.setBookId("isbn1001");
         book1.setName("그리고 아무도 없었다");
         book1.setUnitPrice(new BigDecimal(10800));
         book1.setAuthor("아가사 크리스티");
@@ -29,7 +29,7 @@ import java.util.*;
         book1.setFileName("ISBN1001.jpg");
 
         Book book2 = new Book();
-        book2.setBookId("ISBN1002");
+        book2.setBookId("isbn1002");
         book2.setName("혼자 공부하는 C언어");
         book2.setUnitPrice(new BigDecimal(23400));
         book2.setAuthor("서현우");
@@ -46,7 +46,7 @@ import java.util.*;
         book2.setFileName("ISBN1002.jpg");
 
         Book book3 = new Book();
-        book3.setBookId("ISBN1003");
+        book3.setBookId("isbn1003");
         book3.setName("혼자 공부하는 파이선");
         book3.setUnitPrice(new BigDecimal(19800));
         book3.setAuthor("윤인성");

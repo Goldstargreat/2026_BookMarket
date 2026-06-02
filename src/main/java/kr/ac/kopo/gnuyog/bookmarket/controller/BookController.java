@@ -64,7 +64,7 @@ public class BookController
 
     @GetMapping("/add")
     public String requestAddBookForm(Model model){
-        model.addAttribute("book", new Book());  // ← 이 줄 추가!
+        model.addAttribute("book", new Book());
         return "addBook";
     }
 
