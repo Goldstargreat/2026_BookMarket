@@ -5,7 +5,6 @@ import jakarta.validation.Valid;
 import kr.ac.kopo.gnuyog.bookmarket.domain.Book;
 import kr.ac.kopo.gnuyog.bookmarket.service.BookService;
 import kr.ac.kopo.gnuyog.bookmarket.validator.BookValidator;
-import kr.ac.kopo.gnuyog.bookmarket.validator.UnitsInstockValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -25,8 +24,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static java.lang.System.out;
-
 @Controller
 @RequestMapping("/books")
 public class BookController
@@ -34,26 +31,18 @@ public class BookController
     @Autowired
     private BookService bookService;
 
-    @Value("${file.uploadDir}")
-    String fileDir;
-
 //    @Autowired
-//    private UnitsInstockValidator unitsInstockValidator;
+//    private UnitsInStockValidator unitsInStockValidator;
 
     @Autowired
     private BookValidator bookValidator;
 
-    @InitBinder
-    public void initBinder(WebDataBinder binder)
-    {
-//        binder.addValidators(unitsInstockValidator);
-        binder.setValidator(bookValidator);
-        binder.setAllowedFields("bookId", "name", "unitPrice", "author", "description", "publisher", "category",
-                "unitsInStock", "totalPages", "releaseDate", "condition", "bookImage");
-    }
+    @Value("${file.uploadDir}")
+    String fileDir;
 
     @RequestMapping(method = RequestMethod.GET)
-    public String requestBookList(Model model){
+    public String requestBookList(Model model)
+    {
         List<Book> listOfBooks = bookService.getAllBookList();
         model.addAttribute("bookList", listOfBooks);
         return "books";
@@ -76,14 +65,16 @@ public class BookController
     }
 
     @GetMapping("/filter/{bookFilter}")
-    public String requestBooksByFilter(@MatrixVariable(pathVar = "bookFilter") Map<String, List<String>> bookFilter, Model model){
+    public String requestBooksByFilter(@MatrixVariable(pathVar = "bookFilter") Map<String, List<String>> bookFilter, Model model)
+    {
         Set<Book> booksByFilter = bookService.getBookListByFilter(bookFilter);
         model.addAttribute("bookList", booksByFilter);
         return "books";
     }
 
     @GetMapping("/add")
-    public String requestAddBookForm(Model model){
+    public String requestAddBookForm(Model model)
+    {
         model.addAttribute("book", new Book());
         return "addBook";
     }
@@ -91,17 +82,16 @@ public class BookController
     @PostMapping("/add")
     public String submitAddNewBook(@Valid @ModelAttribute Book book, BindingResult bindingResult)
     {
-        if(bindingResult.hasErrors())
-        {
-         return "addBook";
-        }
+        if (bindingResult.hasErrors())
+            return "addBook";
+
         MultipartFile bookImage = book.getBookImage();
-        out.println("파일사이즈" + bookImage.getSize());
+        System.out.println("파일사이즈" + bookImage.getSize());
         String saveName = bookImage.getOriginalFilename();
         File saveFile = new File(fileDir, saveName);
-        if (bookImage != null && !bookImage.isEmpty()){
-            try
-            {
+        if (bookImage != null && !bookImage.isEmpty())
+        {
+            try {
                 bookImage.transferTo(saveFile);
             } catch (IOException e)
             {
@@ -119,38 +109,36 @@ public class BookController
         model.addAttribute("addTitle", "신규 도서 등록");
     }
 
-    @GetMapping("download")
-    public void downloadBookImage(@RequestParam("file") String paramKey,
-                                  HttpServletResponse response)
+
+    @GetMapping("/download")
+    public void downloadBookImage(@RequestParam("file") String paramKey, HttpServletResponse response)
     {
         File imgFile = new File(fileDir + paramKey);
 
         response.setContentType("application/download");
-        response.setContentLength((int) imgFile.length());
-        response.setHeader("Content-Disposition",
-                "attachment;filename=\"" + paramKey + "\"");
+        response.setContentLength((int)imgFile.length());
+        response.setHeader("Content-Disposition", "attachment;filename=\"" + paramKey + "\"");
 
         try {
-            OutputStream os = response.getOutputStream();
-            // 브라우저 출력 스트림 얻기
+            OutputStream out = response.getOutputStream();
             FileInputStream fileIn = new FileInputStream(imgFile);
-            // 파일 읽기 스트림 생성
-            FileCopyUtils.copy(fileIn, os);
-            // 파일 내용을 브라우저로 복사.
+            FileCopyUtils.copy(fileIn, out);
             fileIn.close();
-            os.close();
-            // 스트림 닫기
+            out.close();
         } catch (IOException e)
-                // 다운로드 오류 처리
         {
             throw new RuntimeException(e);
-            //
         }
     }
 
-    @GetMapping("/all")
-    public ModelAndView requestAllBooks()
+    @InitBinder
+    public void initBinder(WebDataBinder binder)
     {
+        binder.setValidator(bookValidator);
+    }
+
+    @GetMapping("/all")
+    public ModelAndView requestAllBooks(){
         ModelAndView modelAndView = new ModelAndView();
         List<Book> list = bookService.getAllBookList();
         modelAndView.addObject("bookList", list);
