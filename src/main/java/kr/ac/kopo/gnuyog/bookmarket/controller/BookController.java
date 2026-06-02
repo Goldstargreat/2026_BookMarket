@@ -4,12 +4,15 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import kr.ac.kopo.gnuyog.bookmarket.domain.Book;
 import kr.ac.kopo.gnuyog.bookmarket.service.BookService;
+import kr.ac.kopo.gnuyog.bookmarket.validator.BookValidator;
+import kr.ac.kopo.gnuyog.bookmarket.validator.UnitsInstockValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
@@ -34,6 +37,21 @@ public class BookController
     @Value("${file.uploadDir}")
     String fileDir;
 
+//    @Autowired
+//    private UnitsInstockValidator unitsInstockValidator;
+
+    @Autowired
+    private BookValidator bookValidator;
+
+    @InitBinder
+    public void initBinder(WebDataBinder binder)
+    {
+//        binder.addValidators(unitsInstockValidator);
+        binder.setValidator(bookValidator);
+        binder.setAllowedFields("bookId", "name", "unitPrice", "author", "description", "publisher", "category",
+                "unitsInStock", "totalPages", "releaseDate", "condition", "bookImage");
+    }
+
     @RequestMapping(method = RequestMethod.GET)
     public String requestBookList(Model model){
         List<Book> listOfBooks = bookService.getAllBookList();
@@ -42,14 +60,16 @@ public class BookController
     }
 
     @GetMapping("/book")
-    public String requestBookById(@RequestParam("id") String bookId, Model model){
+    public String requestBookById(@RequestParam("id") String bookId, Model model)
+    {
         Book book = bookService.getBookById(bookId);
         model.addAttribute("book", book);
         return "book";
     }
 
     @GetMapping("/{category}")
-    public String requestBooksByCategory(@PathVariable("category") String bookCategory, Model model){
+    public String requestBooksByCategory(@PathVariable("category") String bookCategory, Model model)
+    {
         List<Book> booksByCategory = bookService.getBookListByCategory(bookCategory);
         model.addAttribute("bookList", booksByCategory);
         return "books";
