@@ -10,11 +10,14 @@ import java.util.*;
     public class BookRepositoryImpl implements BookRepository
 {
     private List<Book> listOfBooks = new ArrayList<Book>();
+    // 책 데이터를 메모리에 저장할 ArrayList를 만든다. 현재는 DB가 없으므로 이곳이 임시 저장소이다.
 
     // 생성자(데이터 초기화) 책을 만들어서 추가함
     public BookRepositoryImpl()
     {
-        Book book1 = new Book();
+        Book book1 = new Book(); // Book 객체 한 개 생성
+
+        // Lombok이 만들어준 setter로 책 정보를 하나씩 채워넣는다.
         book1.setBookId("isbn1001");
         book1.setName("그리고 아무도 없었다");
         book1.setUnitPrice(new BigDecimal(10800));
@@ -61,21 +64,25 @@ import java.util.*;
         book3.setReleaseDate("2022 / 06 / 01");
         book3.setFileName("ISBN1003.jpg");
 
+        // 만든 책 3권을 리스트에 추가. 이것이 초기 데이터.
         listOfBooks.add(book1);
         listOfBooks.add(book2);
         listOfBooks.add(book3);
 }
 
     @Override
-        public List<Book> getAllBookList()
+        public List<Book> getAllBookList() // 인터페이에서 선언한 메서드를 구현
     {
-            return listOfBooks;
-    } // 전체 조회
+            return listOfBooks; // 전체 리스트를 반환한다.
+    }
 
     @Override
     public Book getBookById(String bookId)
     { // id로 조회하기
-        Book book = null;
+        Book book = null; // 결과를 담을 변수를 null로 초기화
+
+        // 리스트를 순회하면서 bookId가 일치하는 책을 찾는다.
+        // null 체크를 먼저 하는 것은 NullPointerException 방지용. 찾으면 break로 반복 중단.
         for(Book searchBook: listOfBooks)
         {
             if(searchBook != null && searchBook.getBookId() != null && searchBook.getBookId().equals(bookId))
@@ -84,13 +91,15 @@ import java.util.*;
                 break;
             }
         }
-            if(book == null) // 없으면 예외 처리
+            if(book == null) // 못 찾으면 예외를 던진다.
             {
-                throw new IllegalArgumentException("도서ID가 " + "bookId" + "인 도서는 찾을 수 없습니다!");
+                throw new IllegalArgumentException("도서ID가 " + bookId + "인 도서는 찾을 수 없습니다!");
             }
             return book;
         }
 
+        // 카테고리가 일치하는 책만 골라서 새 리스트에 담아 반환.
+        // equalsIgnoreCase는 대소문자 구분 없이 비교.
     @Override
     public List<Book> getBookListByCategory(String category)
     {
@@ -105,12 +114,16 @@ import java.util.*;
         return bookByCategory;
     }
 
+    // 출판사 조건에 맞는 책들을 담는 집합(Set), 카테고리 결과를 담을 Set 두 개 준비.
+    // filter.keySet()으로 어떤 조건이 들어왔는지 확인.
     @Override
     public Set<Book> getBookListByFilter(Map<String, List<String>> filter) // 필터 검색
     {
         Set<Book> booksByPublisher = new HashSet<Book>();
         Set<Book> booksByCategory = new HashSet<Book>();
         Set<String> booksByFilter = filter.keySet();
+
+        // publisher 조건이 있으면 출판사가 일치하는 책을 booksByPublisher에 담는다
         if(booksByFilter.contains("publisher"))
         {
             for(String publisherName : filter.get("publisher"))
@@ -124,6 +137,8 @@ import java.util.*;
                 }
             }
         }
+
+        // category 조건이 있으면 위에서 만든 getBookListByCategory를 재활용해서 booksByCategory에 담는다
         if(booksByFilter.contains("category"))
         {
             for(String category : filter.get("category"))
@@ -132,10 +147,13 @@ import java.util.*;
                 booksByCategory.addAll(list);
             }
         }
+
+        // retainAll은 교집합. 카테고리 조건이랑 출판사 조건 둘 다 만족하는 책만 남겨서 반환.
         booksByCategory.retainAll(booksByPublisher);
         return booksByCategory;
     }
 
+    // 새 책을 리스트에 추가
     @Override
     public void setNewBook(Book book)
     {
