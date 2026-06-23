@@ -31,12 +31,11 @@
                 <h3>로그인이 필요합니다.</h3>
             </div>
 
-            <div class="alert alert-danger" th:if="${param.error}">
+            <div class="alert alert-danger" th:if="${error}">
                 UserName과 Password가 올바르지 않습니다.
             </div>
 
             <form action="/BookMarket/login" method="post">
-                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
                 <div class="mb-3">
                     <input type="text" name="username" class="form-control"
                            placeholder="Input UserName" required autofocus>
