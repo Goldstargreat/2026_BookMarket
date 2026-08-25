@@ -1,6 +1,7 @@
 package kr.ac.kopo.gnuyog.bookmarket.repository;
 
 import kr.ac.kopo.gnuyog.bookmarket.domain.Book;
+import kr.ac.kopo.gnuyog.bookmarket.exception.BookIdException;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
@@ -91,10 +92,14 @@ import java.util.*;
                 break;
             }
         }
-            if(book == null) // 못 찾으면 예외를 던진다.
-            {
-                throw new IllegalArgumentException("도서ID가 " + bookId + "인 도서는 찾을 수 없습니다!");
-            }
+//            if(book == null) // 못 찾으면 예외를 던진다.
+//            {
+//                throw new IllegalArgumentException("도서ID가 " + bookId + "인 도서는 찾을 수 없습니다!");
+//            }
+        if(book == null) // 못 찾으면 예외를 던진다.
+        {
+            throw new BookIdException(bookId);
+        }
             return book;
         }
 

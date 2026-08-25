@@ -1,8 +1,11 @@
 package kr.ac.kopo.gnuyog.bookmarket.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import kr.ac.kopo.gnuyog.bookmarket.domain.Book;
+import kr.ac.kopo.gnuyog.bookmarket.exception.BookIdException;
+import kr.ac.kopo.gnuyog.bookmarket.exception.CategoryException;
 import kr.ac.kopo.gnuyog.bookmarket.service.BookService;
 import kr.ac.kopo.gnuyog.bookmarket.validator.BookValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +33,7 @@ public class BookController
 {
     @Autowired
     private BookService bookService;
+    // 도서 관련 비즈니스 로직(DB 조회 등)을 처리하는 서비스 객체를 주입받음.
 
 //    @Autowired
 //    private UnitsInStockValidator unitsInStockValidator;
@@ -57,9 +61,14 @@ public class BookController
     }
 
     @GetMapping("/{category}")
-    public String requestBooksByCategory(@PathVariable("category") String bookCategory, Model model)
+    public String requestBooksByCategory(
+            @PathVariable("category") String bookCategory, Model model)
     {
         List<Book> booksByCategory = bookService.getBookListByCategory(bookCategory);
+        if (booksByCategory == null || booksByCategory.isEmpty())
+        {
+            throw new CategoryException();
+        }
         model.addAttribute("bookList", booksByCategory);
         return "books";
     }
@@ -144,5 +153,14 @@ public class BookController
         modelAndView.addObject("bookList", list);
         modelAndView.setViewName("books");
         return modelAndView;
+    }
+    @ExceptionHandler(value = {BookIdException.class})
+    public ModelAndView handleError(HttpServletRequest req, BookIdException exception){
+        ModelAndView mav = new ModelAndView();
+        mav.addObject("invalidBookId", exception.getBookId());
+        mav.addObject("exception", exception);
+        mav.addObject("url",req.getRequestURL() + "?" + req.getQueryString());
+        mav.setViewName("errorBookId");
+        return mav;
     }
 }
