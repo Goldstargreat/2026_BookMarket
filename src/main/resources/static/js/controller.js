@@ -7,16 +7,25 @@ function addToCart(bookId)
     }
 }
 
-function removeFromCart(bookId, cartId)
+function removeFromCart(bookId)
 {
     if (confirm("장바구니에서 해당 도서를 삭제하시겠습니까?"))
     {
-        document.removeForm.action = "/BookMarket/cart/book/" + bookId;
-        document.removeForm.submit();
-
-        setTimeout(function()
-        {
-            location.reload();
-        }, 500);
+        fetch("/BookMarket/cart/book/" + bookId, { method: "DELETE" })
+            .then(function (response)
+            {
+                if (response.ok)
+                {
+                    location.reload();
+                } else
+                {
+                    alert("삭제에 실패했습니다. (상태 코드: " + response.status + ")");
+                }
+            })
+            .catch(function (error)
+            {
+                alert("삭제 중 오류가 발생했습니다.");
+                console.error(error);
+            });
     }
 }
