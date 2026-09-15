@@ -47,4 +47,14 @@ public class CartRepositoryImpl implements CartRepository
     }
     // read 메서드 구현. Map에서 cartId에 해당하는 Cart를 찾아 반환. 없으면 null을 반환합니다
     // (예외 처리는 없음 — 나중에 개선 포인트가 될 수 있어요).
+    public void update(String cartId, Cart cart)
+    {
+        if(!listofCarts.keySet().contains(cartId))
+        {
+            throw new IllegalArgumentException(String.format("장바구니 목록을 갱신할 수 없습니다. " +
+                    "장바구니 %s id가 존재하지 않습니다", cartId));
+        }
+        listofCarts.put(cartId, cart);
+        System.out.println("장바구니" + cart);
+    }
 }

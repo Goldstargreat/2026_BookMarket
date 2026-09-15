@@ -10,4 +10,5 @@ public interface CartRepository
     Cart read(String cartId);
     // cartId(문자열)를 받아서 해당 장바구니를 찾아 반환하는 메서드 선언.
     //즉 이 인터페이스는 "장바구니 저장소는 최소한 create와 read 기능을 가져야 한다"는 규칙만 정의합니다.
+    void update(String cartId, Cart cart);
 }

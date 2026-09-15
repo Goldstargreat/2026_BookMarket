@@ -31,4 +31,9 @@ public class CartServiceImpl implements CartService
     // read 메서드를 재정의합니다.
     // cartId(문자열, 예: 세션 ID)를 받아 cartRepository의 read 메서드에 조회를 위임하고,
     // 찾은 Cart 객체를 반환합니다.
+    @Override
+    public void update(String cartId, Cart cart)
+    {
+        cartRepository.update(cartId, cart);
+    }
 }
