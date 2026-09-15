@@ -1,4 +1,4 @@
-package kr.ac.kopo.gnuyog.bookmarket.domain.;
+package kr.ac.kopo.gnuyog.bookmarket.domain;
 
 import lombok.Data;
 import lombok.ToString;
