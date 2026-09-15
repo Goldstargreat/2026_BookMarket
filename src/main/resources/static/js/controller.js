@@ -7,7 +7,7 @@ function addToCart(bookId)
     }
 }
 
-function removeFromCart(bookId)
+function removeFromCart(bookId, cartId)
 {
     if (confirm("장바구니에서 해당 도서를 삭제하시겠습니까?"))
     {
