@@ -1,4 +1,4 @@
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Welcome</title>
@@ -30,30 +30,30 @@
     <div class="row align-items-md-stretch">
 
         <div class="col-md-12">
+            <!-- clearCart()는 이제 fetch로 DELETE 요청을 직접 보내므로
+                 폼(form)과 _method 히든 필드는 필요 없어서 제거했습니다.
+                 cartId는 th:href를 통해 JS 함수 인자로 전달합니다. -->
+            <a th:href="'javascript:clearCart(\'' + ${cartId} + '\')'" class="btn btn-danger" style="float:left">삭제하기</a>
             <a href="#" class="btn btn-success text-right" style="float:right">주문하기</a>
         </div>
 
         <div style="padding-top: 50px">
 
-            <!-- 삭제 요청용 form -->
-            <form name="removeForm" id="removeForm" method="post">
-                <input type="hidden" name="_method" value="delete"/>
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th>도서</th>
+                    <th>가격</th>
+                    <th>수량</th>
+                    <th>소계</th>
+                    <th>비고</th>
+                    <th></th>
+                </tr>
+                </thead>
 
-                <table class="table table-hover">
-                    <thead>
-                    <tr>
-                        <th>도서</th>
-                        <th>가격</th>
-                        <th>수량</th>
-                        <th>소계</th>
-                        <th>비고</th>
-                        <th></th>
-                    </tr>
-                    </thead>
-
-                    <tbody>
-                    <tr th:if="${cart != null}"
-                        th:each="item : ${cart.cartItems}">
+                <tbody>
+                <th:block th:if="${cart != null}">
+                    <tr th:each="item : ${cart.cartItems}">
 
                         <td th:text="${item.value.book.bookId + '-' + item.value.book.name}">
                         </td>
@@ -76,10 +76,9 @@
                         </td>
 
                     </tr>
-                    </tbody>
-                </table>
-
-            </form>
+                </th:block>
+                </tbody>
+            </table>
 
             <div class="text-end" style="padding-right: 30px">
                 <b>
