@@ -14,7 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
-@RequestMapping(value = "/cart") // 생략(기본): 정상적 실행에 대한 응답(200), 정상 + 반환값 없다 : 204
+@RequestMapping(value = "/cart")
 public class CartController {
     @Autowired
     private CartService cartService;
@@ -23,46 +23,42 @@ public class CartController {
     private BookService bookService;
 
     @GetMapping
-    public String requestCartId(HttpServletRequest request) {
+    public String requestCartId(HttpServletRequest request){
         String sessionId = request.getSession().getId();
         return "redirect:/cart/" + sessionId;
     }
 
     @PostMapping
-    public @ResponseBody Cart create(@RequestBody Cart cart) {
+    public @ResponseBody Cart create(@RequestBody Cart cart){
         return cartService.create(cart);
     }
 
     @GetMapping("/{cartId}")
-    public String requestCartList(@PathVariable(value = "cartId") String cartId, Model model) {
+    public String requestCartList(@PathVariable(value = "cartId")String cartId, Model model){
         Cart cart = cartService.read(cartId);
         model.addAttribute("cart", cart);
-        // cart.html에서 clearCart(cartId)를 호출할 때 cartId 값이 필요하므로
-        // 모델에 cartId도 함께 담아서 화면(Thymeleaf)에 전달합니다.
-        model.addAttribute("cartId", cartId);
         return "cart";
     }
 
     @PutMapping("/{cartId}")
-    public @ResponseBody Cart read(@PathVariable(value = "cartId") String cartId) {
+    public @ResponseBody Cart read(@PathVariable(value = "cartId") String cartId){
         return cartService.read(cartId);
     }
 
     @PutMapping("/book/{bookId}")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void addCartByNewItem(@PathVariable("bookId") String bookId, HttpServletRequest request) {
+    public void addCartByNewItem(@PathVariable("bookId") String bookId, HttpServletRequest request){
         String sessionId = request.getSession(true).getId();
 
         Cart cart = cartService.read(sessionId);
 
-        if (cart == null) {
+        if (cart == null)
             cart = cartService.create(new Cart(sessionId));
-        }
 
         Book book = bookService.getBookById(bookId);
-        if (book == null) {
+
+        if (book == null)
             throw new IllegalArgumentException(new BookIdException(bookId));
-        }
 
         cart.addCartItem(new CartItem(book));
 
@@ -70,21 +66,20 @@ public class CartController {
     }
 
     @DeleteMapping("/book/{bookId}")
-    @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void removeCartByItem(@PathVariable("bookId") String bookId, HttpServletRequest request) {
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)//생략(기본):정상적 실행에 대한 응답(200), 정상+반환값없다: 204
+    public void removeCartByItem(@PathVariable("bookId") String bookId, HttpServletRequest request){
         String sessionId = request.getSession(true).getId();
 
         Cart cart = cartService.read(sessionId);
 
-        if (cart == null) {
+        if (cart == null)
             cart = cartService.create(new Cart(sessionId));
-        }
 
         Book book = bookService.getBookById(bookId);
 
-        if (book == null) {
+        if (book == null)
             throw new IllegalArgumentException(new BookIdException(bookId));
-        }
+
         cart.removeCartItem(new CartItem(book));
 
         cartService.update(sessionId, cart);
@@ -92,9 +87,7 @@ public class CartController {
 
     @DeleteMapping("/{cartId}")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void deleteCartList(@PathVariable("cartId") String cartId)
-    {
+    public void deleteCartList(@PathVariable("cartId") String cartId){
         cartService.delete(cartId);
-
     }
 }
