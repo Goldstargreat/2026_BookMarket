@@ -2,8 +2,23 @@ function addToCart(bookId)
 {
     if (confirm("장바구니에 해당 도서를 추가하시겠습니까?"))
     {
-        document.addForm.action = "/BookMarket/cart/book/" + bookId;
-        document.addForm.submit();
+        fetch("/BookMarket/cart/book/" + bookId, { method: "PUT" })
+            .then(function (response)
+            {
+                if (response.ok)
+                {
+                    alert("장바구니에 도서가 추가되었습니다.");
+                    location.href = "/BookMarket/cart";
+                } else
+                {
+                    alert("추가에 실패했습니다. (상태 코드: " + response.status + ")");
+                }
+            })
+            .catch(function (error)
+            {
+                alert("추가 중 오류가 발생했습니다.");
+                console.error(error);
+            });
     }
 }
 
