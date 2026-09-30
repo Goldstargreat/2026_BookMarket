@@ -16,9 +16,11 @@ import java.math.BigDecimal;
 public class Book
     //  책을 정의함. 책에 대한 정보를 담는 틀.
 {
-    @BookId // 중복 체크 어노테이션
-    @Pattern(regexp = "isbn[0-9a-zA-Z] + ", message = "{Pattern.book.bookId}")
-    // 오류 메시지는 messages.properties 파일에서 가져온다
+    @BookId // 직접 만든 검증 어노테이션입니다(중복 ID 체크로 추정).
+    @Pattern(regexp = "isbn[0-9a-zA-Z]+", message = "{Pattern.book.bookId}")
+    // 정규식 검사입니다. 의도는 "isbn으로 시작하고 뒤에 영문/숫자가 하나 이상"
+    // message = "{Pattern.book.bookId}": 중괄호는 "messages.properties에서
+    // 이 키를 찾아서 메시지로 써라"는 뜻입니다.
     private String bookId; // 도서 id
 
     @Size(min = 4, max = 50, message = "{Size.book.name}")
