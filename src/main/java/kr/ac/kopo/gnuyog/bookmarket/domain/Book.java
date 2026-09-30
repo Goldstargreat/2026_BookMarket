@@ -29,7 +29,7 @@ public class Book
 
     @Min(value = 0, message = "{Min.book.unitPrice}")
     // 가격은 0 이상이어야 해 (음수 불가)
-    @Digits(integer = 8, fraction = 2, message = "{Digits.book.unitPirce}")
+    @Digits(integer = 8, fraction = 2, message = "{Digits.book.unitPrice}")
     // 정수 8자리, 소수 2자리까지 허용
     @NotNull(message = "{NotNull.book.unitPrice}")
     private BigDecimal unitPrice; // 단가
