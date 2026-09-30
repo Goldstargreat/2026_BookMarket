@@ -10,8 +10,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.math.BigDecimal;
 
 @Data
-@Setter
-@Getter
+// @Setter
+// @Getter
 
 public class Book
     //  책을 정의함. 책에 대한 정보를 담는 틀.
