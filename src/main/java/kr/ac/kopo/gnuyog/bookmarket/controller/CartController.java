@@ -39,6 +39,7 @@ public class CartController {
     public String requestCartList(@PathVariable(value = "cartId")String cartId, Model model){
         Cart cart = cartService.read(cartId);
         model.addAttribute("cart", cart);
+        model.addAttribute("cartId", cartId);   // ← 이 줄 추가
         return "cart";
     }
 

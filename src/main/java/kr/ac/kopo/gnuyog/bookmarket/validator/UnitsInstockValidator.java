@@ -22,7 +22,7 @@ public class UnitsInstockValidator implements Validator
         Book book = (Book) target;
         BigDecimal unitPrice = book.getUnitPrice();
         long unitsInStock = book.getUnitsInStock();
-        if(unitPrice != null && unitPrice.intValue() >= 10000 && unitsInStock >= 99)
+        if(unitPrice != null && unitPrice.intValue() >= 10000 && unitsInStock >= 100)
         {
             errors.rejectValue("unitsInStock", "UnitsInstockValidator.message", "가격이 10000원 이상인 경우에는 100개 이상을 재고량으로 등록할 수 없습니다. ");
         }
