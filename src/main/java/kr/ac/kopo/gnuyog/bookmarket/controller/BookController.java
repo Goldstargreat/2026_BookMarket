@@ -165,11 +165,15 @@ public class BookController
     public void initBinder(WebDataBinder binder)
     {
         binder.setValidator(bookValidator);
+        // 이 컨트롤러가 검증할 때 쓸 검사기를 bookValidator로 바꿔줍니다.
+        // 이 검사기(추정)는 ValidationConfig에서 UnitsInstockValidator를 추가해서 만든 것입니다.
     }
 
     @GetMapping("/all")
-    public ModelAndView requestAllBooks(){
+    public ModelAndView requestAllBooks()
+    {
         ModelAndView modelAndView = new ModelAndView();
+        // Model 대신 ModelAndView를 씁니다. 데이터(addObject)와 화면 이름(setViewName)을 한 객체에 담아 반환하는 방식입니다.
         List<Book> list = bookService.getAllBookList();
         modelAndView.addObject("bookList", list);
         modelAndView.setViewName("books");
