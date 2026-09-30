@@ -12,7 +12,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
+// 핵심 아이디어는 세션 ID를 장바구니 번호로 쓴다는 것입니다.
+// 세션은 브라우저(사용자)마다 서버가 구분해 주는 값이라,
+// 로그인 없이도 사용자별 장바구니를 만들 수 있습니다.
 @Controller
 @RequestMapping(value = "/cart")
 public class CartController {

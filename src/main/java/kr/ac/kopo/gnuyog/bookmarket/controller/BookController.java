@@ -180,6 +180,8 @@ public class BookController
         return modelAndView;
     }
     @ExceptionHandler(value = {BookIdException.class})
+    // 이 컨트롤러 안에서 BookIdException이 발생하면 이 메서드가 처리합니다. 잘못된 ID, 예외 객체, 요청 주소를 ModelAndView에 담아 errorBookId.html을 보여줍니다.
+    // Repository에서 던진 예외가 Service를 거쳐 여기까지 올라오는 것입니다.
     public ModelAndView handleError(HttpServletRequest req, BookIdException exception){
         ModelAndView mav = new ModelAndView();
         mav.addObject("invalidBookId", exception.getBookId());
