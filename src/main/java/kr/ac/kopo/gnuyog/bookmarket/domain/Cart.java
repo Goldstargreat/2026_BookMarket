@@ -1,5 +1,5 @@
 package kr.ac.kopo.gnuyog.bookmarket.domain;
-
+// Cart는 장바구니 전체를 의미해요
 import lombok.Data;
 import lombok.ToString;
 

@@ -18,7 +18,7 @@ public class CartItem
         this.book = book;
         quantity = 1;
         totalPrice = book.getUnitPrice();
-    }
+    } // 생성자입니다. 처음 담으면 수량 1개, 소계는 책 단가 그대로입니다.
     public void setBook(Book book)
     {
         this.book = book;
