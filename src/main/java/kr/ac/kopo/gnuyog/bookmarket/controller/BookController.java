@@ -27,8 +27,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-@Controller
-@RequestMapping("/books")
+@Controller // 요청을 받는 곳 반환한 문자열은 화면(템플릿) 이름으로 해석됨
+@RequestMapping("/books") // 이 클래스의 공통 주소
 public class BookController
 {
     @Autowired
@@ -43,23 +43,31 @@ public class BookController
 
     @Value("${file.uploadDir}")
     String fileDir;
+    // @Value("${file.uploadDir}")는 application.properties의 값을 변수에 넣어줍니다.
 
     @RequestMapping(method = RequestMethod.GET)
     public String requestBookList(Model model)
     {
+        // (1) 도서 목록: GET /books
         List<Book> listOfBooks = bookService.getAllBookList();
         model.addAttribute("bookList", listOfBooks);
         return "books";
+        // 서비스에서 목록을 받아 "bookList"라는 이름으로 Model에 담고,
+        // books.html에서 ${bookList}로 꺼내 씁니다.
     }
 
+    // (2) 도서 상세: GET /books/book?id=isbn1001
     @GetMapping("/book")
     public String requestBookById(@RequestParam("id") String bookId, Model model)
     {
+        // @RequestParam("id")로 ID를 받아 조회하고
+        // "book"이라는 이름으로 담아 book.html을 보여줍니다.
         Book book = bookService.getBookById(bookId);
         model.addAttribute("book", book);
         return "book";
     }
 
+    // (3) 카테고리별: GET /books/{category}
     @GetMapping("/{category}")
     public String requestBooksByCategory(
             @PathVariable("category") String bookCategory, Model model)
@@ -73,14 +81,18 @@ public class BookController
         return "books";
     }
 
+    // (4)필터: GET /books/filter/{bookFilter}
     @GetMapping("/filter/{bookFilter}")
     public String requestBooksByFilter(@MatrixVariable(pathVar = "bookFilter") Map<String, List<String>> bookFilter, Model model)
-    {
+    { // @MatrixVariable은 /books/filter/publisher=한빛미디어;category=IT교육교재
+        // 같은 주소의 ;로 구분된 값을 Map으로 받습니다.
         Set<Book> booksByFilter = bookService.getBookListByFilter(bookFilter);
         model.addAttribute("bookList", booksByFilter);
         return "books";
     }
 
+    // (5) 도서 등록 화면: GET /books/add
+    //빈 Book 객체를 "book"으로 담아 addBook.html을 보여줍니다. 폼과 객체를 연결하기 위한 것입니다.
     @GetMapping("/add")
     public String requestAddBookForm(Model model)
     {
@@ -88,6 +100,7 @@ public class BookController
         return "addBook";
     }
 
+    // 도서 등록 처리: POST /books/add
     @PostMapping("/add")
     public String submitAddNewBook(@Valid @ModelAttribute Book book, BindingResult bindingResult)
     {
@@ -95,19 +108,26 @@ public class BookController
             return "addBook";
 
         MultipartFile bookImage = book.getBookImage();
-        System.out.println("파일사이즈" + bookImage.getSize());
-        String saveName = bookImage.getOriginalFilename();
-        File saveFile = new File(fileDir, saveName);
+
+        // 1. 먼저 이미지가 있는지 확인한다 (null이거나 비어 있으면 건너뜀)
         if (bookImage != null && !bookImage.isEmpty())
         {
+            // 2. 이미지가 있다고 확인된 후에만 파일 이름을 꺼낸다
+            String saveName = bookImage.getOriginalFilename();
+            File saveFile = new File(fileDir, saveName);
+
             try {
+                // 3. 실제 파일 저장
                 bookImage.transferTo(saveFile);
             } catch (IOException e)
             {
                 throw new RuntimeException("이미지가 업로드 되지 않았습니다.");
             }
+
+            // 4. 저장에 성공한 뒤에 파일 이름을 Book에 기록한다
+            book.setFileName(saveName);
         }
-        book.setFileName(saveName);
+
         bookService.setNewBook(book);
         return "redirect:/books";
     }
@@ -116,9 +136,10 @@ public class BookController
     public void addAddtributes(Model model)
     {
         model.addAttribute("addTitle", "신규 도서 등록");
-    }
+    } // @ModelAttribute가 메서드에 붙으면 이 컨트롤러의 모든 요청 처리 전에 자동 실행됩니다.
+    // 그래서 어느 화면이든 ${addTitle}("신규 도서 등록")을 쓸 수 있습니다.
 
-
+    // (8) 이미지 다운로드: GET /books/download?file=...
     @GetMapping("/download")
     public void downloadBookImage(@RequestParam("file") String paramKey, HttpServletResponse response)
     {
