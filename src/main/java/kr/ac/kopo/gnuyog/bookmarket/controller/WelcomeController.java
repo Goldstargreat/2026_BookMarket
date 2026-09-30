@@ -4,9 +4,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
-public class WelcomeController {
+public class WelcomeController
+{
     @GetMapping("/home")
-    public String welcomeMethod(){
+    public String welcomeMethod()
+    {
         return "welcome";
     }
 }
+// BookMarket/home으로 접속하면 welcome.html을 보여줍니다.
