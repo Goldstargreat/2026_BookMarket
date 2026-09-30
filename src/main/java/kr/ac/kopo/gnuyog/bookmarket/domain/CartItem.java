@@ -13,6 +13,11 @@ public class CartItem
     private int quantity; // 수량
     private BigDecimal totalPrice; // 단위 가격 * 수량
 
+    public CartItem()
+    {
+
+    }   // 기본생성자
+
     public CartItem(Book book)
     {
         this.book = book;
