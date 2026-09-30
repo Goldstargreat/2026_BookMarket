@@ -48,6 +48,7 @@ public class CartRepositoryImpl implements CartRepository
 
     @Override
     public void delete(String cartId)
+            // delete: 없으면 예외, 있으면 remove합니다.
     {
         if (!listOfCarts.keySet().contains(cartId))
         {
