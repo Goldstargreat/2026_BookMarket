@@ -43,15 +43,14 @@
                 <p><b>출판일: </b><span th:text="${book.getReleaseDate()}"></span></p>
                 <p><b>분류: </b><span th:text="${book.getCategory()}"></span></p>
                 <p><b>재고량: </b><span th:text="${book.getUnitsInStock()}"></span></p>
-                <h4 th:text="${book.getUnitPrice()}+' 원'"></h4>
+                <!-- [수정] .intValue()로 소수점 절사 -->
+                <h4 th:text="${book.getUnitPrice().intValue()}+' 원'"></h4>
                 <br>
-                <p>
-                <form name="addForm" id="addForm" method="post">
-                    <input type="hidden" name="_method" value="put"/>
+                <div>
                     <a th:href="'javascript:addToCart(\''+ ${book.getBookId()} +'\')'" class="btn btn-primary">도서주문 &raquo;</a>
                     <a href="/BookMarket/cart" class="btn btn-warning" role="button">장바구니 &raquo;</a>
                     <a href="/BookMarket/books" class="btn btn-secondary" role="button">도서목록 &raquo;</a>
-                </form>
+                </div>
             </div>
         </div>
 

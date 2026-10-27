@@ -32,7 +32,8 @@
 			<p th:text="${book.author}"></p>
 			<p th:text="${book.publisher} + '|' + ${book.releaseDate}"></p>
 			<p align="left" th:text="${book.description}"></p>
-			<p th:text="${book.unitPrice}+'원'"></p>
+			<!-- [수정] .intValue()로 소수점 절사 -->
+			<p th:text="${book.unitPrice.intValue()}+'원'"></p>
 			<p><a th:href="'/BookMarket/books/book?id='+${book.bookId}" class="btn btn-secondary" role="button">상세정보 &raquo;</a></p>
 		</div>
 	</div>

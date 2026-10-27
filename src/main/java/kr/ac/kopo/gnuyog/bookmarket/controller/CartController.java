@@ -12,9 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-// 핵심 아이디어는 세션 ID를 장바구니 번호로 쓴다는 것입니다.
-// 세션은 브라우저(사용자)마다 서버가 구분해 주는 값이라,
-// 로그인 없이도 사용자별 장바구니를 만들 수 있습니다.
+
 @Controller
 @RequestMapping(value = "/cart")
 public class CartController {
@@ -37,11 +35,11 @@ public class CartController {
     }
 
     @GetMapping("/{cartId}")
-    public String requestCartList(@PathVariable(value = "cartId")String cartId, Model model)
+    public String requestCartList(@PathVariable(value = "cartId") String cartId, Model model)
     {
         Cart cart = cartService.read(cartId);
         model.addAttribute("cart", cart);
-        model.addAttribute("cartId", cartId);   // ← 이 줄 추가
+        model.addAttribute("cartId", cartId);
         return "cart";
     }
 
@@ -62,10 +60,9 @@ public class CartController {
         if (cart == null)
             cart = cartService.create(new Cart(sessionId));
 
+        // [수정] 없는 책이면 getBookById가 BookIdException을 던진다.
+        //        → 아래 handleBookIdException이 404로 응답하므로 null 검사는 지웠다.
         Book book = bookService.getBookById(bookId);
-
-        if (book == null)
-            throw new IllegalArgumentException(new BookIdException(bookId));
 
         cart.addCartItem(new CartItem(book));
 
@@ -73,7 +70,7 @@ public class CartController {
     }
 
     @DeleteMapping("/book/{bookId}")
-    @ResponseStatus(value = HttpStatus.NO_CONTENT)//생략(기본):정상적 실행에 대한 응답(200), 정상+반환값없다: 204
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void removeCartByItem(@PathVariable("bookId") String bookId, HttpServletRequest request)
     {
         String sessionId = request.getSession(true).getId();
@@ -83,10 +80,8 @@ public class CartController {
         if (cart == null)
             cart = cartService.create(new Cart(sessionId));
 
+        // [수정] 위와 같은 이유로 null 검사 제거
         Book book = bookService.getBookById(bookId);
-
-        if (book == null)
-            throw new IllegalArgumentException(new BookIdException(bookId));
 
         cart.removeCartItem(new CartItem(book));
 
@@ -98,5 +93,13 @@ public class CartController {
     public void deleteCartList(@PathVariable("cartId") String cartId)
     {
         cartService.delete(cartId);
+    }
+
+    // [수정] 추가: 이 컨트롤러에서 BookIdException이 나면 화면 대신 404 상태 코드만 보낸다.
+    //        controller.js의 response.ok가 false가 되어 "추가에 실패했습니다 (404)"가 뜬다.
+    @ExceptionHandler(BookIdException.class)
+    @ResponseStatus(value = HttpStatus.NOT_FOUND)
+    public void handleBookIdException()
+    {
     }
 }

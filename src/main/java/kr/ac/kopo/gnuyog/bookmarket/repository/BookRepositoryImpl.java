@@ -61,8 +61,8 @@ public class BookRepositoryImpl implements BookRepository
     @Override
     public Set<Book> getBookListByFilter(Map<String, List<String>> filter)
     {
-        Set<Book> booksByPublisher = new HashSet<>();
-        Set<Book> booksByCategory = new HashSet<>();
+        Set<Book> booksByPublisher = new HashSet<Book>();
+        Set<Book> booksByCategory = new HashSet<Book>();
 
         if (filter.containsKey("publisher"))
         {
@@ -72,6 +72,11 @@ public class BookRepositoryImpl implements BookRepository
                         "select * from book where lower(publisher) = lower(?)", mapper, publisherName));
             }
         }
+        else
+        {
+            // [수정] 출판사 조건이 없으면 전체 책을 넣어 둔다 (조건 없음 = 제한 없음)
+            booksByPublisher.addAll(getAllBookList());
+        }
 
         if (filter.containsKey("category"))
         {
@@ -80,8 +85,13 @@ public class BookRepositoryImpl implements BookRepository
                 booksByCategory.addAll(getBookListByCategory(category));
             }
         }
+        else
+        {
+            // [수정] 분야 조건이 없으면 전체 책을 넣어 둔다
+            booksByCategory.addAll(getAllBookList());
+        }
 
-        booksByCategory.retainAll(booksByPublisher); // 기존과 동일하게 교집합
+        booksByCategory.retainAll(booksByPublisher); // 교집합
         return booksByCategory;
     }
 

@@ -38,7 +38,6 @@
                         <div class="col-sm-3">
                             <input type="text" name="bookId" class="form-control" th:field="*{bookId}"/>
                         </div>
-
                         <div class="col-sm-6">
                             <p class="text-danger" th:errors="*{bookId}"></p>
                         </div>
@@ -103,9 +102,10 @@
                     <div class="mb-3 row">
                         <label class="col-sm-2 control-label">상태</label>
                         <div class="col-sm-3">
-                            <input type="radio" name="condition" value="New"/> 신규도서
-                            <input type="radio" name="condition" value="Old"/> 중고도서
-                            <input type="radio" name="condition" value="E-Book"/> 전자책
+                            <!-- [수정] th:field 추가 → 다시 열려도 선택 유지 (name은 th:field가 자동 생성) -->
+                            <input type="radio" th:field="*{condition}" value="New"/> 신규도서
+                            <input type="radio" th:field="*{condition}" value="Old"/> 중고도서
+                            <input type="radio" th:field="*{condition}" value="E-Book"/> 전자책
                         </div>
                     </div>
                     <div class="mb-3 row">

@@ -38,7 +38,8 @@ public class CartRepositoryImpl implements CartRepository
     @Override
     public void update(String cartId, Cart cart)
     {
-        if (!listOfCarts.keySet().contains(cart.getCartId()))
+        // [수정] cart.getCartId() → cartId (저장할 때 쓰는 키와 같은 값으로 확인)
+        if (!listOfCarts.keySet().contains(cartId))
         {
             throw new IllegalArgumentException(String.format("장바구니 목록을 갱신할 수 없습니다. 장바구니 %s id가 존재하지 않습니다.", cartId));
         }
@@ -48,11 +49,10 @@ public class CartRepositoryImpl implements CartRepository
 
     @Override
     public void delete(String cartId)
-            // delete: 없으면 예외, 있으면 remove합니다.
     {
         if (!listOfCarts.keySet().contains(cartId))
         {
-            throw  new IllegalArgumentException(String.format("장바구니 목록 삭제 불가능. 이유: 해당 장바구니 id(%s)가 존재하지 않음", cartId));
+            throw new IllegalArgumentException(String.format("장바구니 목록 삭제 불가능. 이유: 해당 장바구니 id(%s)가 존재하지 않음", cartId));
         }
 
         listOfCarts.remove(cartId);
