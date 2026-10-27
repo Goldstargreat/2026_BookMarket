@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>주문 정보 확인</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+</head>
+<body>
+<div class="container py-4">
+    <header class="pb-3 mb-4 border-bottom">
+        <a href="/BookMarket/home" class="d-flex align-items-center text-body-emphasis text-decoration-none">
+            <img src="/BookMarket/imgs/book_icon.png">&nbsp;&nbsp;
+            <span class="fs-4">BookMarket</span>
+        </a>
+    </header>
+
+    <div class="p-5 mb-4 bg-body-tertiary rounded-3">
+        <div class="container-fluid py-5">
+            <h1 class="display-5 fw-bold">주문 정보 확인</h1>
+            <p class="col-md-8 fs-4">BookMarket</p>
+        </div>
+    </div>
+
+    <div class="row align-items-md-stretch">
+        <div class="col-md-6">
+            <h5>고객 정보</h5>
+            <p>성명: <span th:text="${order.customer.name}"></span></p>
+            <p>전화번호: <span th:text="${order.customer.phone}"></span></p>
+        </div>
+        <div class="col-md-6">
+            <h5>배송 정보</h5>
+            <p>받는 사람: <span th:text="${order.shipping.name}"></span></p>
+            <p>배송일: <span th:text="${order.shipping.date}"></span></p>
+            <p>배송지:
+                <span th:text="${order.shipping.address.country}"></span>
+                (<span th:text="${order.shipping.address.zipcode}"></span>)
+                <span th:text="${order.shipping.address.addressName}"></span>
+                <span th:text="${order.shipping.address.detailName}"></span>
+            </p>
+        </div>
+
+        <table class="table table-hover mt-3">
+            <thead>
+            <tr>
+                <th>도서</th>
+                <th>가격</th>
+                <th>수량</th>
+                <th>소계</th>
+            </tr>
+            </thead>
+            <tbody>
+            <!-- 도서 목록을 돌면서, 주문항목(orderItems)에서 같은 도서 ID의 수량·소계를 꺼낸다 -->
+            <tr th:each="book : ${bookList}">
+                <td th:text="${book.bookId} + '-' + ${book.name}"></td>
+                <td th:text="${book.unitPrice.intValue()} + '원'"></td>
+                <td th:text="${order.orderItems.get(book.bookId).quantity} + '개'"></td>
+                <td th:text="${order.orderItems.get(book.bookId).totalPrice.intValue()} + '원'"></td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="text-end" style="padding-right: 30px">
+            <b>총액 <span th:text="${order.grandTotal.intValue()} + '원'"></span></b>
+        </div>
+
+        <!-- [주문완료]를 누르면 POST /order/orderConfirmation → DB 저장 -->
+        <form action="/BookMarket/order/orderConfirmation" method="post" class="mt-3">
+            <a href="/BookMarket/order/orderShippingInfo" class="btn btn-secondary">이전</a>
+            <button type="submit" class="btn btn-success">주문완료</button>
+            <a href="/BookMarket/order/orderCancelled" class="btn btn-secondary">취소</a>
+        </form>
+    </div>
+
+    <footer class="pt-3 mt-4 text-body-secondary border-top">
+        <span class="text-body-secondary">&copy;2026 BookMarket</span>
+    </footer>
+</div>
+</body>
+</html>
