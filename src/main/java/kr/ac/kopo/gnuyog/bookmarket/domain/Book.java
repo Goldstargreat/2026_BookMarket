@@ -3,15 +3,10 @@ package kr.ac.kopo.gnuyog.bookmarket.domain;
 import jakarta.validation.constraints.*;
 import kr.ac.kopo.gnuyog.bookmarket.validator.BookId;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.math.BigDecimal;
 
 @Data
-// @Setter
-// @Getter
 
 public class Book
     //  책을 정의함. 책에 대한 정보를 담는 틀.
