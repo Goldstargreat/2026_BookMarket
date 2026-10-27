@@ -5,7 +5,9 @@ import kr.ac.kopo.gnuyog.bookmarket.domain.Order;
 import kr.ac.kopo.gnuyog.bookmarket.repository.BookRepository;
 import kr.ac.kopo.gnuyog.bookmarket.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
 public class OrderServiceImpl implements OrderService
 {
     @Autowired
