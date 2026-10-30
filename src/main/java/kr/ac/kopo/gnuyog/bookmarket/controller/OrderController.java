@@ -1,5 +1,6 @@
 package kr.ac.kopo.gnuyog.bookmarket.controller;
 
+import jakarta.servlet.http.HttpSession;
 import kr.ac.kopo.gnuyog.bookmarket.domain.*;
 import kr.ac.kopo.gnuyog.bookmarket.service.BookService;
 import kr.ac.kopo.gnuyog.bookmarket.service.CartService;
@@ -41,13 +42,17 @@ public class OrderController
     @Autowired
     private BookService bookService;
 
-    List<Book> listOfBooks;   // 주문 확인 화면에 보여줄 도서 목록
-    Order order;              // 단계별로 채워 나가는 주문 객체
-    String cartId;            // [추가] 주문이 끝나면 비울 장바구니 번호
+    // [수정] 컨트롤러는 모든 사용자가 같이 쓰는 객체 하나뿐이라서
+    //        주문 정보를 필드에 두면 여러 사람의 주문이 섞인다.
+    //        → 사용자마다 따로 있는 HttpSession에 저장한다.
+    //        아래는 세션에 저장할 때 쓰는 이름(키)이다. 오타를 막으려고 상수로 만들었다.
+    private static final String SESSION_ORDER = "order";             // 단계별로 채워 나가는 주문 객체
+    private static final String SESSION_LIST_OF_BOOKS = "listOfBooks"; // 주문 확인 화면에 보여줄 도서 목록
+    private static final String SESSION_CART_ID = "cartId";     // 주문이 끝나면 비울 장바구니 번호
 
     // 1단계: 장바구니 내용으로 주문(Order)을 만든다
     @GetMapping("/{cartId}")
-    public String requestCartList(@PathVariable(value = "cartId") String cartId)
+    public String requestCartList(@PathVariable(value = "cartId") String cartId, HttpSession session)
     {
         Cart cart = cartService.read(cartId);
 
@@ -57,9 +62,8 @@ public class OrderController
             return "redirect:/cart/" + cartId;
         }
 
-        this.cartId = cartId;
-        order = new Order();
-        listOfBooks = new ArrayList<Book>();
+        Order order = new Order();
+        List<Book> listOfBooks = new ArrayList<Book>();
 
         for (CartItem item : cart.getCartItems().values())
         {
@@ -87,13 +91,19 @@ public class OrderController
 
         order.setGrandTotal(cart.getGrandTotal());
 
+        // [수정] 만든 주문 정보를 이 사용자의 세션에 저장한다
+        session.setAttribute(SESSION_ORDER, order);
+        session.setAttribute(SESSION_LIST_OF_BOOKS, listOfBooks);
+        session.setAttribute(SESSION_CART_ID, cartId);
+
         return "redirect:/order/orderCustomerInfo";
     }
 
     // 2단계: 고객 정보 입력 화면 보여주기
     @GetMapping("/orderCustomerInfo")
-    public String requestCustomerInfoForm(Model model)
+    public String requestCustomerInfoForm(Model model, HttpSession session)
     {
+        Order order = (Order) session.getAttribute(SESSION_ORDER);   // 세션에서 주문 꺼내기
         if (order == null)          // 주문을 시작하지 않고 주소로 바로 들어온 경우
         {
             return "redirect:/cart";
@@ -104,20 +114,23 @@ public class OrderController
 
     // 2단계: 고객 정보 입력 처리
     @PostMapping("/orderCustomerInfo")
-    public String requestCustomerInfo(@ModelAttribute Customer customer)
+    public String requestCustomerInfo(@ModelAttribute Customer customer, HttpSession session)
     {
+        Order order = (Order) session.getAttribute(SESSION_ORDER);
         if (order == null)
         {
             return "redirect:/cart";
         }
+        // 세션에 들어 있는 주문 객체를 직접 고치므로 다시 setAttribute 하지 않아도 된다
         order.setCustomer(customer);   // 입력받은 고객 정보를 주문에 저장
         return "redirect:/order/orderShippingInfo";
     }
 
     // 3단계: 배송 정보 입력 화면 보여주기
     @GetMapping("/orderShippingInfo")
-    public String requestShippingInfoForm(Model model)
+    public String requestShippingInfoForm(Model model, HttpSession session)
     {
+        Order order = (Order) session.getAttribute(SESSION_ORDER);
         if (order == null)
         {
             return "redirect:/cart";
@@ -128,8 +141,9 @@ public class OrderController
 
     // 3단계: 배송 정보 입력 처리
     @PostMapping("/orderShippingInfo")
-    public String requestShippingInfo(@ModelAttribute Shipping shipping, BindingResult bindingResult)
+    public String requestShippingInfo(@ModelAttribute Shipping shipping, BindingResult bindingResult, HttpSession session)
     {
+        Order order = (Order) session.getAttribute(SESSION_ORDER);
         if (order == null)
         {
             return "redirect:/cart";
@@ -145,21 +159,23 @@ public class OrderController
 
     // 4단계: 주문 확인 화면 보여주기
     @GetMapping("/orderConfirmation")
-    public String requestConfirmOrder(Model model)
+    public String requestConfirmOrder(Model model, HttpSession session)
     {
+        Order order = (Order) session.getAttribute(SESSION_ORDER);
         if (order == null)
         {
             return "redirect:/cart";
         }
         model.addAttribute("order", order);
-        model.addAttribute("bookList", listOfBooks);
+        model.addAttribute("bookList", session.getAttribute(SESSION_LIST_OF_BOOKS));
         return "orderConfirmation";
     }
 
     // 4단계: [주문완료] 버튼 처리 → DB에 저장하고 장바구니를 비운다
     @PostMapping("/orderConfirmation")
-    public String requestConfirmOrderFinished()
+    public String requestConfirmOrderFinished(HttpSession session)
     {
+        Order order = (Order) session.getAttribute(SESSION_ORDER);
         if (order == null)
         {
             return "redirect:/cart";
@@ -170,6 +186,7 @@ public class OrderController
         orderProService.save(order);
 
         // 주문이 끝났으니 장바구니 비우기
+        String cartId = (String) session.getAttribute(SESSION_CART_ID);
         if (cartService.read(cartId) != null)
         {
             cartService.delete(cartId);
@@ -180,29 +197,34 @@ public class OrderController
 
     // 5단계: 주문 완료 화면
     @GetMapping("/orderFinished")
-    public String requestFinishOrder(Model model)
+    public String requestFinishOrder(Model model, HttpSession session)
     {
+        Order order = (Order) session.getAttribute(SESSION_ORDER);
         if (order == null)          // 완료 화면에서 새로고침한 경우
         {
             return "redirect:/books";
         }
         model.addAttribute("order", order);
 
-        // 화면에 넘겼으니 다음 주문을 위해 비워 둔다
-        order = null;
-        listOfBooks = null;
-        cartId = null;
+        // 화면에 넘겼으니 다음 주문을 위해 세션에서 지운다
+        clearOrderSession(session);
 
         return "orderFinished";
     }
 
     // 주문 취소 (장바구니는 그대로 남는다)
     @GetMapping("/orderCancelled")
-    public String requestCancelOrder()
+    public String requestCancelOrder(HttpSession session)
     {
-        order = null;
-        listOfBooks = null;
-        cartId = null;
+        clearOrderSession(session);
         return "orderCancelled";
+    }
+
+    // [추가] 세션에 저장해 둔 주문 정보 3가지를 모두 지운다
+    private void clearOrderSession(HttpSession session)
+    {
+        session.removeAttribute(SESSION_ORDER);
+        session.removeAttribute(SESSION_LIST_OF_BOOKS);
+        session.removeAttribute(SESSION_CART_ID);
     }
 }
