@@ -13,4 +13,5 @@ public interface BookRepository
   List<Book> getBookListByCategory(String category); // "IT", "소설" 등의 카테고리로 필터링
   Set<Book> getBookListByFilter(Map<String, List<String>> filter); // 여러 조건으로 검색(고급 검색 키- 값 구조)
   void setNewBook(Book book); // 새 책을 추가하는 메서드 선언. 반환값 없음.
+  int decreaseUnitsInStock(String bookId, long quantity); // [추가] 재고를 quantity만큼 줄이고, 바뀐 행 수를 반환 (재고 부족이면 0)
 }

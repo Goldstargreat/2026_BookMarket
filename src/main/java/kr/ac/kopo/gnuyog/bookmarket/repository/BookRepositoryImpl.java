@@ -104,4 +104,15 @@ public class BookRepositoryImpl implements BookRepository
                 book.getDescription(), book.getPublisher(), book.getCategory(),
                 book.getUnitsInStock(), book.getReleaseDate(), book.getCondition(), book.getFileName());
     }
+
+    // [추가] DB의 재고 수량을 quantity만큼 줄인다
+    // where 조건에 "재고 >= 주문 수량"을 넣어서, 두 사람이 동시에 주문해도 재고가 음수가 되지 않는다
+    // update는 바뀐 행의 개수를 돌려준다 → 1이면 성공, 0이면 재고 부족(또는 없는 책)
+    @Override
+    public int decreaseUnitsInStock(String bookId, long quantity)
+    {
+        return template.update(
+                "update book set units_in_stock = units_in_stock - ? where book_id = ? and units_in_stock >= ?",
+                quantity, bookId, quantity);
+    }
 }

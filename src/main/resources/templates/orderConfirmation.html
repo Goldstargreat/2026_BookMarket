@@ -21,6 +21,9 @@
         </div>
     </div>
 
+    <!-- [추가] 재고가 부족해서 주문이 안 되면 오류 메시지를 보여준다 -->
+    <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+
     <div class="row align-items-md-stretch">
         <div class="col-md-6">
             <h5>고객 정보</h5>

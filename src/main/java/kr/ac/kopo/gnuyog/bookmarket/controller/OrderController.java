@@ -173,7 +173,7 @@ public class OrderController
 
     // 4단계: [주문완료] 버튼 처리 → DB에 저장하고 장바구니를 비운다
     @PostMapping("/orderConfirmation")
-    public String requestConfirmOrderFinished(HttpSession session)
+    public String requestConfirmOrderFinished(Model model, HttpSession session)
     {
         Order order = (Order) session.getAttribute(SESSION_ORDER);
         if (order == null)
@@ -181,9 +181,22 @@ public class OrderController
             return "redirect:/cart";
         }
 
+        // [수정] orderProService.save(order) → orderService.saveOrder(order)
+        //        saveOrder는 책마다 DB 재고를 줄인 다음 주문을 저장한다
         // Order를 저장하면 cascade 설정 때문에 고객·배송·주소·주문항목도 함께 저장된다
         // 저장이 끝나면 order.getOrderId()에 DB가 만든 주문번호가 들어 있다
-        orderProService.save(order);
+        try
+        {
+            orderService.saveOrder(order);
+        }
+        catch (IllegalArgumentException e)
+        {
+            // 재고가 부족하면 주문 확인 화면을 다시 보여주고 오류 메시지를 띄운다
+            model.addAttribute("errorMessage", e.getMessage());
+            model.addAttribute("order", order);
+            model.addAttribute("bookList", session.getAttribute(SESSION_LIST_OF_BOOKS));
+            return "orderConfirmation";
+        }
 
         // 주문이 끝났으니 장바구니 비우기
         String cartId = (String) session.getAttribute(SESSION_CART_ID);
