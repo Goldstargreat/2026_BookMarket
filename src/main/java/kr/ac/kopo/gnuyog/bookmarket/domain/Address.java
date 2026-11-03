@@ -11,7 +11,7 @@ public class Address
 {
     @Id
     @GeneratedValue
-    private int id;
+    private Long id;
     private String country; // 국가명
     private String zipcode; // 우편번호
     private String addressName; // 기본 주소
