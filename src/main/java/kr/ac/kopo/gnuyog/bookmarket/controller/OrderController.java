@@ -36,12 +36,14 @@ public class OrderController {
     Order order;
 
     @GetMapping("/{cartId}")
-    public String requestCartList(@PathVariable(value = "cartId") String cartId, Model model){
+    public String requestCartList(@PathVariable(value = "cartId") String cartId, Model model)
+    {
         Cart cart = cartService.read(cartId);
         order = new Order();
         listOfBooks = new ArrayList<Book>();
 
-        for (CartItem item : cart.getCartItems().values()){
+        for (CartItem item : cart.getCartItems().values())
+        {
             OrderItem orderItem = new OrderItem();
 
             Book book = item.getBook();
@@ -63,7 +65,8 @@ public class OrderController {
     }
 
     @GetMapping("/orderCustomerInfo")
-    public String requestCustomerInfoForm(Model model){
+    public String requestCustomerInfoForm(Model model)
+    {
         model.addAttribute("customer", order.getCustomer());
         return "orderCustomerInfo";
     }
@@ -83,7 +86,8 @@ public class OrderController {
     }
 
     @PostMapping("/orderShippingInfo")
-    public String requestShippingInfo(@Valid @ModelAttribute Shipping shipping, BindingResult bindingResult, Model model){
+    public String requestShippingInfo(@Valid @ModelAttribute Shipping shipping, BindingResult bindingResult, Model model)
+    {
         if (bindingResult.hasErrors())
         {
             return "orderShippingInfo";
@@ -101,7 +105,8 @@ public class OrderController {
     }
 
     @GetMapping("/orderFinished")
-    public String requestOrderFinished(HttpServletRequest request, Model model){
+    public String requestOrderFinished(HttpServletRequest request, Model model)
+    {
         orderService.saveOrder(order);
         model.addAttribute("order", order);
         HttpSession session = request.getSession();
@@ -114,7 +119,8 @@ public class OrderController {
     }
 
     @GetMapping("/orderCancelled")
-    public String requestCancelled(HttpServletRequest request){
+    public String requestCancelled(HttpServletRequest request)
+    {
         HttpSession session = request.getSession();
 
         if(session != null)
@@ -124,5 +130,4 @@ public class OrderController {
 
         return "orderCancelled";
     }
-
 }
