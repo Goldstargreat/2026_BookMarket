@@ -2,7 +2,7 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>배송 정보</title>
+    <title>주문 배송 정보</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
 </head>
 <body>
@@ -34,7 +34,7 @@
                     <label class="col-sm-2 control-label">배송일</label>
                     <div class="col-sm-3">
                         <!-- Shipping.date의 @DateTimeFormat(pattern = "yyyy/MM/dd") 형식으로 입력 -->
-                        <input type="text" class="form-control" th:field="*{date}" placeholder="2026/11/01"/>
+                        <input type="text" class="form-control" th:field="*{date}" placeholder="yyyy/mm/dd"/>
                     </div>
                     <div class="col-sm-6">
                         <p class="text-danger" th:if="${#fields.hasErrors('date')}">배송일은 2026/11/01 형식으로 입력하세요.</p>
