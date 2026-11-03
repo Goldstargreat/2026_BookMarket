@@ -69,13 +69,15 @@ public class OrderController {
     }
 
     @PostMapping("/orderCustomerInfo")
-    public String requestCustomerInfo(@ModelAttribute Customer customer){
+    public String requestCustomerInfo(@ModelAttribute Customer customer)
+    {
         order.setCustomer(customer);
         return "redirect:/order/orderShippingInfo";
     }
 
     @GetMapping("/orderShippingInfo")
-    public String requestShippingInfoForm(Model model){
+    public String requestShippingInfoForm(Model model)
+    {
         model.addAttribute("shipping", order.getShipping());
         return "orderShippingInfo";
     }
@@ -83,7 +85,9 @@ public class OrderController {
     @PostMapping("/orderShippingInfo")
     public String requestShippingInfo(@Valid @ModelAttribute Shipping shipping, BindingResult bindingResult, Model model){
         if (bindingResult.hasErrors())
+        {
             return "orderShippingInfo";
+        }
         order.setShipping(shipping);
         model.addAttribute("order", order);
         return "redirect:/order/orderConfirmation";
@@ -103,8 +107,9 @@ public class OrderController {
         HttpSession session = request.getSession();
 
         if (session != null)
+        {
             session.invalidate();
-
+        }
         return "orderFinished";
     }
 
@@ -113,7 +118,9 @@ public class OrderController {
         HttpSession session = request.getSession();
 
         if(session != null)
+        {
             session.invalidate();
+        }
 
         return "orderCancelled";
     }
