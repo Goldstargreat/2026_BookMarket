@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>주문 목록</title>
@@ -27,57 +27,79 @@
         <div class="row align-items-md-stretch">
 
             <div class="text-end" style="padding-right: 30px">
-                <form action="/BookMarket/logout" method="post">
+                <!-- [수정] action → th:action : Spring Security 의 CSRF 토큰이 자동으로 들어가서 403 오류가 나지 않는다 -->
+                <form th:action="@{/logout}" method="post">
                     <button type="submit" class="btn btn-sm btn-success">Logout</button>
                 </form>
             </div>
+
             <div class="col-md-12">
-                <form name="clearForm" method="post">
+                <!-- [수정] clearForm : <a> 링크는 폼을 전송하지 못한다 (GET 요청만 보냄)
+                            → th:action 을 폼에 넣고, 버튼을 submit 으로 바꿔서 폼이 실제로 전송되게 했다
+                            → hidden _method=delete 덕분에 컨트롤러의 @DeleteMapping("/deleteAll") 이 받는다 -->
+                <form name="clearForm" th:action="@{/order/deleteAll}" method="post"
+                      onsubmit="return confirm('모든 주문을 삭제할까요?');">
                     <input type="hidden" name="_method" value="delete">
-                    <a th:href="@{/order/deleteAll}" class="btn btn-danger" style="float: left">삭제하기</a>
+                    <button type="submit" class="btn btn-danger" style="float: left">삭제하기</button>
                 </form>
             </div>
+
             <div style="padding-top: 50px">
                 <div class="text-end" style="padding-right: 30px">
                     전체 주문수: [[${totalItems}]]
                 </div>
-                <table class="table table-hover">
-                    <thead>
-                    <tr>
-                        <th><a th:href="@{'/order/page?pageNum=' + ${currentPage} + '&sortField=orderId&sortDir=' + ${reverseSortDir}}">주문ID</a></th>
-                        <th><a th:href="@{'/order/page?pageNum=' + ${currentPage} + '&sortField=custormer_id&sortDir=' + ${reverseSortDir}}">고객ID</a></th>
-                        <th><a th:href="@{'/order/page?pageNum=' + ${currentPage} + '&sortField=shipping_id&sortDir=' + ${reverseSortDir}}">배송지</a></th>
-                        <th><a th:href="@{'/order/page?pageNum=' + ${currentPage} + '&sortField=grandTotal&sortDir=' + ${reverseSortDir}}">총액</a></th>
-                        <th>비고</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <form name="removeForm" id="removeForm" method="post">
-                        <input type="hidden" name="_method" value="delete">
-                        <div th:each="order:${orderList}">
-                            <tr>
-                                <td th:text="${order.orderId}"></td>
-                                <td th:text="${order.customer.id}"></td>
-                                <td th:text="${order.shipping.address.addressName}"></td>
-                                <td th:text="${order.grandTotal}"></td>
-                                <!--    수정, 삭제 버튼 추가                                -->
-                                <td></td>
-                            </tr>
-                        </div>
+
+                <!-- [수정] removeForm 을 <tbody> 안에서 <table> 바깥으로 옮김
+                            (<tbody> 안에는 <tr> 만 올 수 있어서, 안에 <form> 을 두면 HTML 문법 오류) -->
+                <form name="removeForm" id="removeForm" method="post">
+                    <input type="hidden" name="_method" value="delete">
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th><a th:href="@{'/order/page?pageNum=' + ${currentPage} + '&sortField=orderId&sortDir=' + ${reverseSortDir}}">주문ID</a></th>
+                            <!-- [수정] custormer_id(오타, DB 컬럼명) → customer.id (Order 클래스의 필드 경로) -->
+                            <th><a th:href="@{'/order/page?pageNum=' + ${currentPage} + '&sortField=customer.id&sortDir=' + ${reverseSortDir}}">고객ID</a></th>
+                            <!-- [수정] shipping_id(DB 컬럼명) → shipping.address.addressName (화면에 보이는 값과 같은 기준) -->
+                            <th><a th:href="@{'/order/page?pageNum=' + ${currentPage} + '&sortField=shipping.address.addressName&sortDir=' + ${reverseSortDir}}">배송지</a></th>
+                            <th><a th:href="@{'/order/page?pageNum=' + ${currentPage} + '&sortField=grandTotal&sortDir=' + ${reverseSortDir}}">총액</a></th>
+                            <th>비고</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <!-- [수정] <div th:each> 로 <tr> 을 감싸면 안 된다 (<tbody> 안에 <div> 불가)
+                                    → th:each 를 <tr> 에 직접 붙임 -->
+                        <tr th:each="order : ${orderList}">
+                            <td th:text="${order.orderId}"></td>
+                            <!-- [수정] ?. : customer, shipping, address 가 비어 있어도 오류가 나지 않게 함 -->
+                            <td th:text="${order.customer?.id}"></td>
+                            <td th:text="${order.shipping?.address?.addressName}"></td>
+                            <td th:text="${order.grandTotal}"></td>
+                            <!--    수정, 삭제 버튼 추가                                -->
+                            <td></td>
+                        </tr>
+
                         <tr>
                             <td></td>
                             <td></td>
-                            <td class="text-right"><h5><b>총액: </b></h5></td>
-                            <td class="text-cetner text-danger"><h4><b>[[${order.grandTotal}]]원</b></h4></td>
+                            <!-- [수정] text-right → text-end (Bootstrap 5 에서 이름이 바뀜) -->
+                            <td class="text-end"><h5><b>총액: </b></h5></td>
+                            <!-- [수정] text-cetner(오타) → text-center
+                                        ${order.grandTotal} → 여기는 th:each 바깥이라 order 변수가 없어서 오류가 난다
+                                        → 이 페이지 주문들의 grandTotal 을 모두 더한 값으로 바꿈 -->
+                            <td class="text-center text-danger"><h4><b>[[${#aggregates.sum(orderList.![grandTotal])}]]원</b></h4></td>
+                            <!-- [수정] 열이 5개라서 칸 하나 추가 -->
+                            <td></td>
                         </tr>
-                    </form>
-                    </tbody>
-                </table>
+                        </tbody>
+                    </table>
+                </form>
             </div>
+
+            <!-- [삭제] 이전 / 주문완료 / 취소 버튼 : 주문 확인 화면(orderConfirmation)에서 복사된 것으로
+                        주문 목록 화면과 맞지 않고, 주문완료(submit) 버튼은 폼 바깥에 있어 눌러도 아무 동작을 하지 않았다
+                        (btn-seccess 오타도 있었음) → 홈으로 가는 버튼으로 바꿈 -->
             <div class="container col-md-5 py-3">
-                <a href="/BookMarket/order/orderShippingInfo" class="btn btn-secondary" role="button">이전</a>
-                <input type="submit" class="btn btn-seccess" value="주문완료"/>
-                <a href="/BookMarket/order/orderCancelled" class="btn btn-secondary" role="button">취소</a>
+                <a href="/BookMarket/home" class="btn btn-secondary" role="button">홈으로</a>
             </div>
         </div>
 
