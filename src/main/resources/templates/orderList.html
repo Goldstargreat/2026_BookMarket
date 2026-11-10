@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang = "ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>주문 목록</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+</head>
+<body>
+<div class="container py-4">
+    <header class="pb-3 mb-4 border-bottom">
+        <a href="/BookMarket/home" class="d-flex align-items-center text-body-emphasis text-decoration-none">
+            <img src="/BookMarket/imgs/book_icon.png">&nbsp;&nbsp;
+            <span class="fs-4">BookMarket</span>
+        </a>
+    </header>
+
+    <div class="p-5 mb-4 bg-body-tertiary rounded-3">
+        <div class="container-fluid py-5">
+            <h1 class="display-5 fw-bold">주문 목록</h1>
+            <p class="col-md-8 fs-4">Order List</p>
+        </div>
+    </div>
+
+    <div class="row align-items-md-stretch">
+        <div class="container">
+            <!-- 주문 목록 전체를 form으로 감싼다. [전체 삭제] 버튼을 누르면 POST /order/deleteAll 로 전송된다 -->
+            <form th:action="@{/order/deleteAll}" method="post"
+                  onsubmit="return confirm('모든 주문을 삭제하시겠습니까?');">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <span>전체 주문: <b>[[${totalItems}]]</b>건</span>
+                <input type="submit" class="btn btn-danger btn-sm" value="전체 삭제">
+            </div>
+
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th>
+                        <a th:href="@{'/order/page?pageNum=' + ${currentPage} + '&sortField=orderId&sortDir=' + ${reverseSortDir}}"
+                           class="text-decoration-none">
+                            주문ID [[${sortDir == 'asc'} ? '▲' : '▼']]
+                        </a>
+                    </th>
+                    <th>
+                        <a th:href="@{'/order/page?pageNum=' + ${currentPage} + '&sortField=customer.customerId&sortDir=' + ${reverseSortDir}}"
+                           class="text-decoration-none">
+                            고객ID
+                        </a>
+                    </th>
+                    <th>
+                        <a th:href="@{'/order/page?pageNum=' + ${currentPage} + '&sortField=shipping.address.addressName&sortDir=' + ${reverseSortDir}}"
+                           class="text-decoration-none">
+                            배송지
+                        </a>
+                    </th>
+                    <th class="text-end">
+                        <a th:href="@{'/order/page?pageNum=' + ${currentPage} + '&sortField=grandTotal&sortDir=' + ${reverseSortDir}}"
+                           class="text-decoration-none">
+                            총액
+                        </a>
+                    </th>
+                    <th class="text-center">비고</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:if="${#lists.isEmpty(orderList)}">
+                    <td colspan="5" class="text-center">주문 내역이 없습니다.</td>
+                </tr>
+                <tr th:each="order : ${orderList}">
+                    <td>[[${order.orderId}]]</td>
+                    <td>[[${order.customer?.customerId}]]</td>
+                    <td th:if="${order.shipping != null and order.shipping.address != null}">
+                        [[${order.shipping.address.addressName}]] [[${order.shipping.address.detailName}]]
+                        ([[${order.shipping.address.zipcode}]])
+                    </td>
+                    <td th:unless="${order.shipping != null and order.shipping.address != null}">-</td>
+                    <td class="text-end">[[${order.grandTotal?.intValue()}]]원</td>
+                    <td class="text-center">
+                        <a th:href="@{/order/view/{id}(id=${order.orderId})}" class="btn btn-sm btn-primary">상세보기</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            </form>
+
+            <!-- 페이지 번호 -->
+            <nav th:if="${totalPages > 1}">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item" th:classappend="${currentPage == 1} ? 'disabled'">
+                        <a class="page-link" th:href="@{/order/page(pageNum=${currentPage - 1}, sortField=${sortField}, sortDir=${sortDir})}">&laquo;</a>
+                    </li>
+                    <li class="page-item" th:each="i : ${#numbers.sequence(1, totalPages)}"
+                        th:classappend="${i == currentPage} ? 'active'">
+                        <a class="page-link" th:href="@{/order/page(pageNum=${i}, sortField=${sortField}, sortDir=${sortDir})}">[[${i}]]</a>
+                    </li>
+                    <li class="page-item" th:classappend="${currentPage == totalPages} ? 'disabled'">
+                        <a class="page-link" th:href="@{/order/page(pageNum=${currentPage + 1}, sortField=${sortField}, sortDir=${sortDir})}">&raquo;</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+
+    <p><a href="/BookMarket/books" class="btn btn-secondary">&laquo; 도서 목록</a></p>
+
+    <footer class="pt-3 mt-4 text-body-secondary border-top">
+        <span class="text-body-secondary">&copy;2026 BookMarket</span>
+    </footer>
+</div>
+</body>
+</html>

@@ -22,13 +22,17 @@
     </div>
 
     <div class="row align-items-md-stretch">
-        <h2 class="alert alert-success">주문해 주셔서 감사합니다.</h2>
-        <p>주문번호: <b th:text="${order.orderId}"></b></p>
-        <p>배송일: <span th:text="${order.shipping.date}"></span></p>
-        <p>총 결제금액: <span th:text="${order.grandTotal.intValue()} + '원'"></span></p>
-        <p><a href="/BookMarket/books" class="btn btn-secondary">&laquo; 도서목록</a></p>
-    </div>
+        <div class = "container">
+            <h2 class="alert alert-success">주문해 주셔서 감사합니다.</h2>
+            <p>주문은 [[${order.shipping.date}]]에 배송될 예정입니다.</p>
+            <p>주문번호: <b th:text="${order.orderId}"></b></p>
+            <p>총 결제금액: <span th:text="${order.grandTotal.intValue()} + '원'"></span></p>
+        </div>
 
+    </div>
+    <br>
+       <p><a href="/BookMarket/books" class="btn btn-primary">&laquo;도서 목록</a></p>
+    </br>
     <footer class="pt-3 mt-4 text-body-secondary border-top">
         <span class="text-body-secondary">&copy;2026 BookMarket</span>
     </footer>
