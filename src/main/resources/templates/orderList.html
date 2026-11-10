@@ -93,6 +93,36 @@
                         </tbody>
                     </table>
                 </form>
+
+                <!-- [추가] 페이지 번호 : OrderProService 에서 한 페이지에 5건씩 나누므로
+                            이 버튼이 없으면 6번째 주문부터는 화면에서 볼 수 없다
+                            sortField, sortDir 를 같이 보내서 페이지를 넘겨도 정렬이 유지된다
+                            (주문이 1건 이상 있을 때만 보임) -->
+                <nav th:if="${totalPages > 0}">
+                    <ul class="pagination justify-content-center">
+
+                        <!-- 이전 : 1페이지에서는 누를 수 없게(disabled) -->
+                        <li class="page-item" th:classappend="${currentPage == 1} ? 'disabled'">
+                            <a class="page-link"
+                               th:href="@{'/order/page?pageNum=' + ${currentPage - 1} + '&sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">이전</a>
+                        </li>
+
+                        <!-- 1 ~ totalPages 까지 번호 버튼, 지금 페이지는 강조(active) -->
+                        <li class="page-item"
+                            th:each="i : ${#numbers.sequence(1, totalPages)}"
+                            th:classappend="${i == currentPage} ? 'active'">
+                            <a class="page-link"
+                               th:href="@{'/order/page?pageNum=' + ${i} + '&sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}"
+                               th:text="${i}">1</a>
+                        </li>
+
+                        <!-- 다음 : 마지막 페이지에서는 누를 수 없게(disabled) -->
+                        <li class="page-item" th:classappend="${currentPage == totalPages} ? 'disabled'">
+                            <a class="page-link"
+                               th:href="@{'/order/page?pageNum=' + ${currentPage + 1} + '&sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">다음</a>
+                        </li>
+                    </ul>
+                </nav>
             </div>
 
             <!-- [삭제] 이전 / 주문완료 / 취소 버튼 : 주문 확인 화면(orderConfirmation)에서 복사된 것으로
