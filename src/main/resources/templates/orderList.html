@@ -26,7 +26,8 @@
         </div>
         <div class="row align-items-md-stretch">
 
-            <div class="text-end" style="padding-right: 30px">
+            <div class="d-flex justify-content-end gap-2" style="padding-right: 30px">
+                <a th:href="@{/home}" class="btn btn-sm btn-primary">홈으로</a>
                 <form action="/BookMarket/logout" method="post">
                     <button type="submit" class="btn btn-sm btn-success">Logout</button>
                 </form>
