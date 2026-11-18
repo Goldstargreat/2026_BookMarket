@@ -181,4 +181,44 @@ public class OrderController {
 
         return modelAndView;
     }
+    @GetMapping("/edit/{id}")
+    public ModelAndView showEditOrder(@PathVariable(value = "id") Long id)
+    {
+        Order order = orderProService.get(id);
+        List<Book> bookList = new ArrayList<Book>();
+        for(OrderItem orderItem:order.getOrderItems().values())
+        {
+            String bookId = orderItem.getBookId();
+            Book book = bookService.getBookById(bookId);
+            bookList.add(book);
+        }
+        ModelAndView modelAndView = new ModelAndView("orderEdit");
+        modelAndView.addObject("order", order);
+        modelAndView.addObject("bookList", bookList);
+
+        return modelAndView;
+    }
+    @GetMapping("/delete/{id}")
+    public String deleteOrder(@PathVariable(value = "id") Long id)
+    {
+        orderProService.delete(id);
+        return "redirect:/order/list";
+    }
+    @GetMapping("/deleteAll")
+    public String deleteAllOrder()
+    {
+        orderProService.deleteAll();
+        return "redirect:/order/list";
+    }
+    @PostMapping("/save")
+    public String saveOrder(@ModelAttribute("order") Order order)
+    {
+        Order saveOrder = orderProService.get(order.getOrderId());
+
+        saveOrder.setCustomer(order.getCustomer());
+        saveOrder.setShipping(order.getShipping());
+
+        orderProService.save(saveOrder);
+        return "redirect:/order/list";
+    }
 }
