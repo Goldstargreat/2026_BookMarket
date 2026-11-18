@@ -103,7 +103,7 @@ public class BookController
                 bookImage.transferTo(saveFile);
             } catch (IOException e)
             {
-                throw new RuntimeException("이미지가 업로드 되지 않았습니다.");
+                throw new RuntimeException("이미지가 업로드되지 않았습니다.");
             }
 
             book.setFileName(saveName);
@@ -114,7 +114,7 @@ public class BookController
     }
 
     @ModelAttribute
-    public void addAddtributes(Model model)
+    public void addAttributes(Model model)
     {
         model.addAttribute("addTitle", "신규 도서 등록");
     }

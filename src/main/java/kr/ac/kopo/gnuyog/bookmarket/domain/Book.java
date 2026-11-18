@@ -39,9 +39,9 @@ public class Book
     // 저자, 설명, 출판사, 분류, 재고량, 출판일, 상태. 검증 어노테이션이 없으므로 아무 값이나 들어와도 됨.
 
     private String fileName; // 업로드된 도서 이미지 파일의 이름 저장
-    private MultipartFile bookImage; // 실제로 업로드 된 도서 이미지 파일 객체를 담는다. 서버에 저장한다.
+    private MultipartFile bookImage; // 실제로 업로드된 도서 이미지 파일 객체를 담는다. 서버에 저장한다.
     // MultipartFile은 스프링이 "폼<html>으로 올라온 파일"을 담아주는 타입입니다.
     // fileName(글자)과 bookImage(파일 자체)는 역할이 다릅니다.
 }
 
-// @Data, @Getter, @Setter를 넣으면 Book 클래스의 모든 멤버 변수의 Setter()와 Getter()메서드가 추가됨
+// @Data, @Getter, @Setter를 넣으면 Book 클래스의 모든 멤버 변수의 Setter()와 Getter() 메서드가 추가됨

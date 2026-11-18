@@ -30,7 +30,7 @@ public class CartItem
         updateTotalPrice();
     }
     // → book 필드의 setter를 직접 재정의(원래 @Data가 자동 생성해줄 것을 오버라이드함).
-    // 책을 변경하면 updateTotalPrice()를 호출해서 소계 금액.도 다시 계산해줍니다.
+    // 책을 변경하면 updateTotalPrice()를 호출해서 소계 금액도 다시 계산해줍니다.
     // (Lombok이 자동 생성하는 단순 setter와 달리, 추가 동작이 필요해서 직접 작성한 것)
 
     public void setQuantity(int quantity)
