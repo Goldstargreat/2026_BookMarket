@@ -46,7 +46,7 @@
                     <thead>
                     <tr>
                         <th><a th:href="@{'/order/page?pageNum=' + ${currentPage} + '&sortField=orderId&sortDir=' + ${reverseSortDir}}">주문ID</a></th>
-                        <th><a th:href="@{'/order/page?pageNum=' + ${currentPage} + '&sortField=custormer_id&sortDir=' + ${reverseSortDir}}">고객ID</a></th>
+                        <th><a th:href="@{'/order/page?pageNum=' + ${currentPage} + '&sortField=customer_id&sortDir=' + ${reverseSortDir}}">고객ID</a></th>
                         <th><a th:href="@{'/order/page?pageNum=' + ${currentPage} + '&sortField=shipping_id&sortDir=' + ${reverseSortDir}}">배송지</a></th>
                         <th><a th:href="@{'/order/page?pageNum=' + ${currentPage} + '&sortField=grandTotal&sortDir=' + ${reverseSortDir}}">총액</a></th>
                         <th>비고</th>
@@ -64,8 +64,8 @@
                                 <!--    상세보기, 수정, 삭제 버튼 추가                                -->
                                 <td>
                                     <a th:href="@{'/order/view/' + ${order.orderId}}"><span class="badge text-bg-secondary">상세보기</span></a>
-                                    <a th:href="@{'/order/edit/' + ${order.orderId}}"><span class="badge text-bg-secondary">수정</span></a>
-                                    <a th:href="@{'/order/delete/' + ${order.orderId}}"><span class="badge text-bg-secondary">삭제</span></a>
+                                    <a th:href="@{'/order/edit/' + ${order.orderId}}"><span class="text-bg-warning">수정</span></a>
+                                    <a th:href="@{'/order/delete/' + ${order.orderId}}"><span class="badge text-bg-danger">삭제</span></a>
                                 </td>
                             </tr>
                         </div>
